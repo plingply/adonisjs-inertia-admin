@@ -1,4 +1,4 @@
-import AdminMenu from '#models/admin_menu'
+import { MenuService } from '#services/menu_service'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 
@@ -9,10 +9,13 @@ import type { NextFn } from '@adonisjs/core/types/http'
  * The request continues as usual, even when the user is not logged-in.
  */
 export default class ShareDataMiddleware {
-  async handle({ inertia }: HttpContext, next: NextFn) {
-    const menus = await AdminMenu.query()
+  async handle({ inertia, auth }: HttpContext, next: NextFn) {
+    let myMenus = []
+    if (auth.user) {
+      myMenus = await MenuService.getMyMenuTree(auth.user)
+    }
     inertia.share({
-      menus: menus,
+      myMenus: myMenus,
     })
     return next()
   }

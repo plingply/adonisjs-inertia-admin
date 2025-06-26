@@ -28,7 +28,7 @@
       class="menu_wrapper"
     >
       <el-menu default-active="/" :collapse="isCollapse" router>
-        <menu-content :menus="menuData"></menu-content>
+        <menu-content :menus="myMenus"></menu-content>
       </el-menu>
       <div class="p-16 h-full box-border w-full of-x-auto">
         <slot></slot>
@@ -42,7 +42,8 @@ import { ref, defineOptions } from 'vue'
 
 import MenuContent from '~/components/MenuContent.vue'
 defineProps<{
-  user: any
+  user: any,
+  myMenus: any[]
 }>()
 
 defineOptions({
@@ -51,66 +52,7 @@ defineOptions({
 
 const isCollapse = ref(false)
 
-const menuData = [
-  {
-    name: 'Home',
-    title: '首页',
-    icon: 'collapse',
-    url: '/',
-    children: [],
-  },
-  {
-    name: 'About',
-    url: '/about',
-    title: '关于',
-    icon: 'collapse',
-    children: [
-      {
-        name: 'Team',
-        title: '团队',
-        icon: 'collapse',
-        url: '/about/team',
-        children: [
-          {
-            name: 'Team',
-            title: '团队1',
-            icon: 'collapse',
-            url: '/about/team',
-            children: [],
-          },
-        ],
-      },
-      {
-        name: 'History',
-        title: '历史',
-        icon: 'collapse',
-        url: '/about/history',
-        children: [],
-      },
-    ],
-  },
-  {
-    name: 'Services',
-    title: '服务',
-    icon: 'collapse',
-    url: '/services',
-    children: [
-      {
-        name: 'Web Design',
-        title: '网站设计',
-        icon: 'collapse',
-        url: '/services/web-design',
-        children: [],
-      },
-      {
-        name: 'SEO',
-        title: 'SEO',
-        url: '/services/seo',
-        children: [],
-      },
-    ],
-  },
-]
+
 </script>
 
 <style lang="less" scoped>
@@ -140,7 +82,7 @@ const menuData = [
     width: auto;
   }
   .el-menu:not(.el-menu--collapse) {
-    width: 180px;
+    width: 220px;
   }
 }
 </style>

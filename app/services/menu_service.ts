@@ -13,7 +13,7 @@ export class MenuService {
     if (AuthService.isAdmin(user)) {
       return menuTree
     }
-    const roleIds: number[] = user.roles.map((item) => item.id)
+    const roleIds: number[] = user.roles?.map((item) => item.id) || []
     const permissions = user.allPermissions
     const hasAllPermissions = AuthService.hasAllPermissions(user)
     function loop(menuArray: MenuItem[]) {
@@ -22,7 +22,10 @@ export class MenuService {
           item.hasRole = !!item.roles.find((role) => roleIds.includes(role.id))
         } else {
           item.hasPermission =
-            hasAllPermissions || !item.permission || permissions.includes(item.permission)
+            hasAllPermissions ||
+            item.permission === '*' ||
+            !item.permission ||
+            permissions.includes(item.permission)
           if (item.children && item.children.length > 0) {
             loop(item.children)
           }
@@ -151,5 +154,6 @@ export class MenuService {
     menu.merge(data)
     await menu.save()
     menu.related('roles').sync(data.roles)
+    return true
   }
 }

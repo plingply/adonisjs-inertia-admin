@@ -1,7 +1,7 @@
 <template>
   <template v-if="isArray(menus) && menus.length > 0">
     <template v-for="menu in menus" :key="menu.name">
-      <el-sub-menu v-if="menu.children && menu.children.length > 0" :index="menu.name">
+      <el-sub-menu v-if="menu.children && menu.children.length > 0" :index="String(menu.id)">
         <template #title>
           <el-icon v-if="menu.icon">
             <svg-icon class="svgClass" :icon-class="menu.icon"> </svg-icon
@@ -10,7 +10,7 @@
         </template>
         <menu-content :menus="menu.children"></menu-content>
       </el-sub-menu>
-      <el-menu-item v-else :index="menu.name">
+      <el-menu-item v-else :index="String(menu.id)">
         <el-icon v-if="menu.icon">
           <svg-icon class="svgClass" :icon-class="menu.icon"> </svg-icon
         ></el-icon>
