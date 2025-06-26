@@ -1,9 +1,11 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import AdminRole from './admin_role.js'
 
 export default class AdminMenu extends BaseModel {
   @column({ isPrimary: true })
-  declare id: unknown
+  declare id: number
 
   @column()
   declare parentId: number | null
@@ -28,4 +30,14 @@ export default class AdminMenu extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  @manyToMany(() => AdminRole, {
+    localKey: 'id',
+    pivotForeignKey: 'menu_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'role_id',
+    pivotTable: 'admin_role_menus',
+    pivotTimestamps: true,
+  })
+  declare roles: ManyToMany<typeof AdminRole>
 }

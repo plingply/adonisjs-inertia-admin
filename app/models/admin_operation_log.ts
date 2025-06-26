@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 
 export default class AdminOperationLog extends BaseModel {
   @column({ isPrimary: true })
-  declare id: unknown
+  declare id: number
 
   @column()
   declare userId: number

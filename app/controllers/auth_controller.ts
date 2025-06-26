@@ -2,11 +2,12 @@ import { AuthService } from '#services/auth_service'
 import { loguinValidator } from '#validators/auth'
 import { HttpContext } from '@adonisjs/core/http'
 import Controller from './controller.js'
+import AdminUser from '#models/admin_user'
 export default class AuthController extends Controller {
   public async login({ request, auth, session, response }: HttpContext) {
     const payload = await loguinValidator.validate(request.all())
     try {
-      const user = await await AuthService.login(payload.username, payload.password)
+      const user = await AuthService.login(payload.username, payload.password)
       await auth.use('web').login(user, true)
       return this.success(user)
     } catch (error) {

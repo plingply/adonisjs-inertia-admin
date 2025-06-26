@@ -64,6 +64,7 @@
     "@adonisjs/vite": "^4.0.0",
     "@element-plus/icons-vue": "^2.3.1",
     "@inertiajs/vue3": "^2.0.12",
+    "@unocss/preset-rem-to-px": "^66.3.1-beta.1",
     "@vinejs/vine": "^3.0.1",
     "@vue/server-renderer": "^3.5.17",
     "adonisjs6-generate-models": "^0.0.2",
@@ -75,6 +76,8 @@
     "luxon": "^3.6.1",
     "mysql2": "^3.14.1",
     "reflect-metadata": "^0.2.2",
+    "unocss": "^66.3.1-beta.1",
+    "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.5.17"
   },
   "hotHook": {
