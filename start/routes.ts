@@ -9,11 +9,10 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
-import { matchRoute } from '../app/utils/index.js'
-import RoleController from '#controllers/role_controller'
 import AdminRole from '#models/admin_role'
 const AuthController = () => import('#controllers/auth_controller')
 const MenuController = () => import('#controllers/menu_controller')
+const RoleController = () => import('#controllers/role_controller')
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router.get('/test', async () => {
@@ -22,7 +21,7 @@ router.get('/test', async () => {
 
 router
   .group(() => {
-    router.on('/').renderInertia('home')
+    router.get('/', [MenuController, 'index'])
     router.on('/no-permission').renderInertia('errors/no_permission')
     router
       .group(() => {

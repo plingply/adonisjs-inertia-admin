@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineEmits, inject, defineExpose } from 'vue'
+import { ref, computed, inject } from 'vue'
 
 const menus = inject<any[]>('menus')
 const permissions = inject<any[]>('permissions')

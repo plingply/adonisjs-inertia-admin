@@ -20,6 +20,10 @@ export default class AuthMiddleware {
     } = {}
   ) {
     await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+    if (ctx.auth?.user) {
+      await ctx.auth.user.load('permissions')
+      await ctx.auth.user.load('roles', (query) => query.preload('permissions'))
+    }
     return next()
   }
 }

@@ -4,7 +4,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { matchRoute } from '../utils/index.js'
 import { MenuService } from '#services/menu_service'
-import AdminUser from '#models/admin_user'
 
 /**
  * Silent auth middleware can be used as a global middleware to silent check
@@ -14,21 +13,11 @@ import AdminUser from '#models/admin_user'
  */
 export default class RouterPeimissionMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
-    const user = ctx.auth.user
-
-    if (!user) return ctx.response.redirect('/login', true)
     if (MenuService.isPublicRoute(ctx.request.url())) return next()
-    const adminUser = await AdminUser.query()
-      .preload('roles', (query) => {
-        query.preload('permissions')
-      })
-      .preload('permissions')
-      .where('id', user.id)
-      .first()
-    if (!adminUser) return ctx.response.redirect('/login', true)
-    if (AuthService.hasAllPermissions(adminUser)) return next()
-
-    const permissions = await AdminPermission.query().whereIn('slug', adminUser.allPermissions)
+    const user = ctx.auth.user
+    if (!user) return ctx.response.redirect('/login', true)
+    if (AuthService.hasAllPermissions(user)) return next()
+    const permissions = await AdminPermission.query().whereIn('slug', user.allPermissions)
     const routers = [] as { method: string; path: string }[]
     permissions.forEach((item) => {
       if (item.httpPath) {

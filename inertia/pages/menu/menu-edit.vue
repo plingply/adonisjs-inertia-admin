@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineExpose, defineEmits } from 'vue'
+import { ref } from 'vue'
 import MenuForm from './menu-form.vue'
 import { updateMenu } from '~/api/menu'
 import { ElMessage } from 'element-plus'

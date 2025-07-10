@@ -78,6 +78,7 @@ export default class AdminUser extends compose(BaseModel, AuthFinder) {
     rolesPermissions.forEach((item) => {
       permissions.push(...item)
     })
+    console.log('allPermissions', [...new Set(permissions)])
     return [...new Set(permissions)]
   }
 }
