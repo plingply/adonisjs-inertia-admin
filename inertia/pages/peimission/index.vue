@@ -15,21 +15,22 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="list" border >
-      <el-table-column prop="id" label="ID" width="50"/>
-      <el-table-column prop="name" label=" 名称" width="170"/>
-      <el-table-column prop="slug" label="标识" width="170"/>
-      <el-table-column prop="permissions" label="权限">
+    <el-table v-loading="loading" :data="list" border>
+      <el-table-column prop="id" label="ID" width="50" />
+      <el-table-column prop="name" label=" 名称" width="170" />
+      <el-table-column prop="slug" label="标识" width="170" />
+      <el-table-column prop="http_method" label="方法" />
+      <el-table-column prop="http_path" label="路由">
         <template #default="{ row }">
-            <el-tag v-for="item in row.permissions" type="success" effect="dark" size="small" class="mr-5 mb-5">{{ item.name }}</el-tag>
+          {{ row.http_path }}
         </template>
       </el-table-column>
       <el-table-column prop="created_at" label="创建时间" width="170" />
       <el-table-column prop="updated_at" label="更新时间" width="170" />
       <el-table-column prop="" label="操作" fixed="right" width="140">
         <template #default="{ row }">
-            <el-button size="small" type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="deleteRow(row.id)">删除</el-button>
+          <el-button size="small" type="primary" @click="openEdit(row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="deleteRow(row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -41,23 +42,19 @@
       @pagination="getList"
     />
   </div>
-
-  <RoleEdit ref="roleEdit" v-model:show.sync="showEdit" :role="currentRole" :permissions="permissions" @submit="getList"/>
 </template>
 
 <script setup lang="ts">
 import Layout from '~/layout/layout.vue'
-import AdminRole from '#models/admin_role'
 import { ref, defineProps } from 'vue'
-import { getRolePage, delRoleById } from '~/api/role'
-import RoleEdit from './role-edit.vue'
+import PermissionsEdit from './permission-edit.vue'
 import AdminPermission from '#models/admin_permission'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { delPermissionById, getPermissionPage } from '~/api/permission'
 
 defineOptions({ layout: Layout })
 const props = defineProps<{
-  permissions: AdminPermission[],
-  roles: AdminRole[],
+  peimissions: AdminPermission[]
   total: number
 }>()
 const queryParams = ref({
@@ -67,8 +64,8 @@ const queryParams = ref({
 })
 const total = ref(props.total)
 const loading = ref(false)
-const list = ref(props.roles)
-const currentRole = ref<AdminRole | null>(null)
+const list = ref(props.peimissions)
+const currentPermission = ref<AdminPermission | null>(null)
 const showEdit = ref(false)
 const reset = () => {
   queryParams.value.page = 1
@@ -81,36 +78,36 @@ const searchFunc = () => {
   getList()
 }
 const getList = () => {
-    loading.value = true
-    getRolePage(queryParams.value)
-    .then((res) => { 
-        list.value = res.data.data.item
-        total.value = res.data.data.total
-    }).finally(() => {
-        loading.value = false
+  loading.value = true
+  getPermissionPage(queryParams.value)
+    .then((res) => {
+      list.value = res.data.data.item
+      total.value = res.data.data.total
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 
-const openEdit = (row: AdminRole) => {
+const openEdit = (row: AdminPermission) => {
   showEdit.value = true
-  currentRole.value = row
+  currentPermission.value = row
 }
 
-const deleteRow = async (id) => {
-  ElMessageBox.confirm('是否确定删除角色?', '提示', {
+const deleteRow = async (id: number) => {
+  ElMessageBox.confirm('是否确定删除权限?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
-  })
-    .then(() => {
-      delRoleById(id).then((res) => {
-        if (res.data.code === 200) {
-          ElMessage.success('删除成功')
-          getList()
-        } else {
-          ElMessage.error('删除失败')
-        }
-      })
+  }).then(() => {
+    delPermissionById(id).then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success('删除成功')
+        getList()
+      } else {
+        ElMessage.error('删除失败')
+      }
     })
+  })
 }
 </script>

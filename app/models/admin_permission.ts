@@ -1,7 +1,8 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import Model from './model.js'
 
-export default class AdminPermission extends BaseModel {
+export default class AdminPermission extends Model {
   @column({ isPrimary: true })
   declare id: number
 
@@ -17,9 +18,20 @@ export default class AdminPermission extends BaseModel {
   @column()
   declare httpPath: string | null
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare createdAt: DateTime | null
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare updatedAt: DateTime | null
 }

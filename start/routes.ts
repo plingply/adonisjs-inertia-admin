@@ -13,6 +13,7 @@ import AdminRole from '#models/admin_role'
 const AuthController = () => import('#controllers/auth_controller')
 const MenuController = () => import('#controllers/menu_controller')
 const RoleController = () => import('#controllers/role_controller')
+const PeimissionController = () => import('#controllers/peimission_controller')
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router.get('/test', async () => {
@@ -27,6 +28,7 @@ router
       .group(() => {
         router.get('/menu', [MenuController, 'index'])
         router.get('/role', [RoleController, 'index'])
+        router.get('/peimission', [PeimissionController, 'index'])
       })
       .prefix('/settings')
   })
@@ -45,8 +47,14 @@ router
         router.post('/menu/del', [MenuController, 'delMenuById'])
         router.post('/menu/create', [MenuController, 'create'])
         router.post('/menu/update', [MenuController, 'update'])
+
         router.get('/role/list', [RoleController, 'list'])
         router.post('/role/update', [RoleController, 'update'])
+        router.post('/role/delete', [RoleController, 'delete'])
+
+        router.get('/permission/list', [PeimissionController, 'list'])
+        router.post('/permission/update', [PeimissionController, 'update'])
+        router.post('/permission/delete', [PeimissionController, 'delete'])
       })
       .use(middleware.auth())
       .use(middleware.rotuePermission())
