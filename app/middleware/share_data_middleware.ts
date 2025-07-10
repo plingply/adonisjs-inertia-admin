@@ -9,12 +9,13 @@ import type { NextFn } from '@adonisjs/core/types/http'
  * The request continues as usual, even when the user is not logged-in.
  */
 export default class ShareDataMiddleware {
-  async handle({ inertia, auth }: HttpContext, next: NextFn) {
+  async handle({ inertia, auth, request }: HttpContext, next: NextFn) {
     let myMenus = []
     if (auth.user) {
       myMenus = await MenuService.getMyMenuTree(auth.user)
     }
     inertia.share({
+      path: request.url(),
       myMenus: myMenus,
     })
     return next()

@@ -105,7 +105,7 @@ const loginSubmit = () => {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .login {
   display: flex;
   justify-content: center;

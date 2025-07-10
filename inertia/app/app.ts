@@ -1,6 +1,9 @@
 /// <reference path="../../adonisrc.ts" />
 /// <reference path="../../config/inertia.ts" />
 
+import '../css/element-var.scss'
+import 'virtual:svg-icons-register'
+import 'virtual:uno.css'
 import '../css/app.css'
 import { createSSRApp, h } from 'vue'
 import type { DefineComponent } from 'vue'
@@ -8,9 +11,6 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
-import 'virtual:uno.css'
-import 'virtual:svg-icons-register'
 import SvgIcon from '~/components/SvgIcon/index.vue'
 import MenuContent from '~/components/MenuContent.vue'
 import Pagination from '~/components/Pagination/index.vue'

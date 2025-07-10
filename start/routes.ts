@@ -46,6 +46,7 @@ router
         router.post('/menu/create', [MenuController, 'create'])
         router.post('/menu/update', [MenuController, 'update'])
         router.get('/role/list', [RoleController, 'list'])
+        router.post('/role/update', [RoleController, 'update'])
       })
       .use(middleware.auth())
       .use(middleware.rotuePermission())

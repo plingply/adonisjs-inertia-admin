@@ -26,4 +26,18 @@ export default class RoleController extends Controller {
     const roles = await RoleService.getRolePage(page, limit, search)
     return this.success(paginate(roles))
   }
+
+  public async delete({ request }: HttpContext) {
+    const id = request.input('id')
+    const res = await RoleService.deleteRoleById(id)
+    if (!res) return this.error('删除失败')
+    return this.success()
+  }
+
+  public async update({ request }: HttpContext) {
+    const data = request.all()
+    const res = await RoleService.updateRole(data)
+    if (!res) return this.error('更新失败')
+    return this.success()
+  }
 }

@@ -14,6 +14,7 @@
         :data="menus"
         draggable
         default-expand-all
+        size="small"
         node-key="id"
         :props="{
           label: 'title',
@@ -184,7 +185,7 @@ const editMenu = (data:any) => {
 }
 </script>
 
-<style lang="less" scope>
+<style lang="scss" scope>
 .menu-tree {
   .el-tree-node__content {
     height: auto !important;

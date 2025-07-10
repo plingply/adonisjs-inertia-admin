@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import { ref, defineEmits, computed } from 'vue'
-import { updateMenu } from '~/api/menu'
-import { ElMessage } from 'element-plus'
 import AdminPermission from '#models/admin_permission';
-const emit = defineEmits(['update:show'])
+import { ElMessage } from 'element-plus';
+import { updateRole } from '~/api/role';
+const emit = defineEmits(['update:show', 'submit'])
 const props = defineProps<{
   role: any
   permissions: AdminPermission[]
@@ -49,6 +49,7 @@ const dialogVisible = computed({
   },
 })
 const roleForm = ref({
+  id: 0,
   name: '',
   slug: '',
   permissions: [],
@@ -59,21 +60,22 @@ const close = () => {
 }
 
 const onOpen = () => {
+  roleForm.value.id = props.role.id
   roleForm.value.name = props.role.name
   roleForm.value.slug = props.role.slug
   roleForm.value.permissions = props.role.permissions.map((item: any) => item.id)
 }
 
-const saveRoleData = (data: any) => {
-  // if (!menu.value?.id) return ElMessage.error('请选择要修改的菜单')
-  // updateMenu(menu.value?.id, data).then((res) => {
-  //   if (res.data.code === 200) {
-  //     ElMessage.success('更新成功')
-  //     close()
-  //     emit('submit')
-  //   } else {
-  //     ElMessage.error('修改失败')
-  //   }
-  // })
+const saveRoleData = () => {
+  if (!roleForm.value?.id) return ElMessage.error('请选择要修改的菜单')
+  updateRole(roleForm.value).then((res) => {
+    if (res.data.code === 200) {
+      ElMessage.success('更新成功')
+      close()
+      emit('submit')
+    } else {
+      ElMessage.error('修改失败')
+    }
+  })
 }
 </script>

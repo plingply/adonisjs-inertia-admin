@@ -27,7 +27,7 @@
       style="grid-template-columns: auto 1fr; height: calc(100vh - 48px)"
       class="menu_wrapper"
     >
-      <el-menu default-active="/" :collapse="isCollapse" router>
+      <el-menu :default-active="activeMenu" :collapse="isCollapse" router @select="menuSelect">
         <menu-content :menus="myMenus"></menu-content>
       </el-menu>
       <div class="p-16 h-full box-border w-full of-x-auto">
@@ -38,12 +38,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineOptions } from 'vue'
+import { ref, defineOptions, computed } from 'vue'
 
 import MenuContent from '~/components/MenuContent.vue'
-defineProps<{
-  user: any,
+const props = defineProps<{
+  user: any
   myMenus: any[]
+  path: string
 }>()
 
 defineOptions({
@@ -51,11 +52,16 @@ defineOptions({
 })
 
 const isCollapse = ref(false)
-
-
+const activeMenu = computed(() => {
+  return props.path || '/'
+})
+const menuSelect = (url: string) => {
+  if (!url) return
+  location.href = url
+}
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .menu_collapse {
   transition: var(--el-transition-all);
   padding: 0 10px;

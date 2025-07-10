@@ -4,3 +4,10 @@ export async function getRolePage(params: any) {
     params,
   })
 }
+
+export async function delRoleById(id: number) {
+  return axios.post('/api/role/delete', { id })
+}
+export async function updateRole(data: any) {
+  return axios.post('/api/role/update', data)
+}
