@@ -100,7 +100,6 @@ const rootMenus = computed(() => {
 
 const initForm = (data?: any) => {
   if (data) {
-    console.log('form data: ', data)
     form.value = {
       title: data.title,
       icon: data.icon,

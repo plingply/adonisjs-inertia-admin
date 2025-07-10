@@ -1,9 +1,10 @@
-import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import { column, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import AdminPermission from './admin_permission.js'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import Model from './model.js'
 
-export default class AdminRole extends BaseModel {
+export default class AdminRole extends Model {
   @column({ isPrimary: true })
   declare id: number
 
@@ -13,10 +14,21 @@ export default class AdminRole extends BaseModel {
   @column()
   declare slug: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare createdAt: DateTime | null
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare updatedAt: DateTime | null
 
   @manyToMany(() => AdminPermission, {

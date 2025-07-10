@@ -9,35 +9,30 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
-import { MenuService } from '#services/menu_service'
-import { AuthService } from '#services/auth_service'
-import AdminUser from '#models/admin_user'
+import { matchRoute } from '../app/utils/index.js'
+import RoleController from '#controllers/role_controller'
+import AdminRole from '#models/admin_role'
 const AuthController = () => import('#controllers/auth_controller')
 const MenuController = () => import('#controllers/menu_controller')
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router.get('/test', async () => {
-  const user = await AdminUser.query()
-    .preload('roles', (query) => {
-      query.preload('permissions')
-    })
-    .preload('permissions')
-    .where('id', 1)
-    .first()
-  if (!user) return 'empty'
-  return await MenuService.getMyMenuTree(user)
+  return AdminRole.all()
 })
 
 router
   .group(() => {
     router.on('/').renderInertia('home')
+    router.on('/no-permission').renderInertia('errors/no_permission')
     router
       .group(() => {
         router.get('/menu', [MenuController, 'index'])
+        router.get('/role', [RoleController, 'index'])
       })
       .prefix('/settings')
   })
   .use(middleware.auth())
+  .use(middleware.rotuePermission())
   .use(middleware.shareData())
 
 // api
@@ -51,7 +46,9 @@ router
         router.post('/menu/del', [MenuController, 'delMenuById'])
         router.post('/menu/create', [MenuController, 'create'])
         router.post('/menu/update', [MenuController, 'update'])
+        router.get('/role/list', [RoleController, 'list'])
       })
       .use(middleware.auth())
+      .use(middleware.rotuePermission())
   })
   .prefix('/api')

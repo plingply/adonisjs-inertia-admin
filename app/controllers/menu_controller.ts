@@ -3,7 +3,7 @@ import Controller from './controller.js'
 import { MenuService } from '#services/menu_service'
 import AdminPermission from '#models/admin_permission'
 import AdminRole from '#models/admin_role'
-export default class Menuontroller extends Controller {
+export default class MenuController extends Controller {
   public async index({ inertia }: HttpContext) {
     const menus = await MenuService.getAllMenuToTree()
     const permissions = await AdminPermission.query()

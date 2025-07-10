@@ -89,8 +89,13 @@ const loginSubmit = () => {
     if (valid) {
       login(loginForm.value.username, loginForm.value.password)
       .then((res) => {
-        cache.set('userInfo', res.data.data)
-        window.location.href = '/'
+        if (res.data.code === 200) {
+          ElMessage.success('登录成功')
+          cache.set('userInfo', res.data.data)
+          window.location.href = '/'
+        } else {
+          ElMessage.error('登录失败')
+        }
       })
       .catch(() => {
         ElMessage.error('账号或密码错误')

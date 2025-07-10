@@ -80,7 +80,6 @@ const menuEditRef = ref()
 const menus = ref(props.menus)
 const treeRef = ref()
 const expandAll = ref(true)
-
 provide('menus', menus)
 provide('permissions', props.permissions)
 provide('roles', props.roles)

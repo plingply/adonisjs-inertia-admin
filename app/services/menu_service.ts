@@ -8,6 +8,11 @@ import { AuthService } from './auth_service.js'
 import { MenuItem } from '../types/menu.js'
 
 export class MenuService {
+  public static publicMenus = ['/login', '/api/login', '/no-permission']
+
+  public static isPublicRoute(url: string) {
+    return this.publicMenus.includes(url)
+  }
   public static async getMyMenuTree(user: AdminUser) {
     const menuTree = await this.getAllMenuToTree()
     if (AuthService.isAdmin(user)) {
@@ -58,7 +63,7 @@ export class MenuService {
   public static async getAllMenuToTree() {
     const menus = await AdminMenu.query().preload('roles').orderBy('order', 'asc')
     const menuArray = menus.map((item) => item.serialize())
-    return handleTree(menuArray, 'id', 'parentId', 'children')
+    return handleTree(menuArray, 'id', 'parent_id', 'children')
   }
 
   public static async saveMenuAll(menus: any[]) {

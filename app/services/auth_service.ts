@@ -3,12 +3,7 @@ import AdminUser from '#models/admin_user'
 export class AuthService {
   public static async login(username: string, password: string) {
     const res = await AdminUser.verifyCredentials(username, password)
-    const user = await AdminUser.query()
-      .preload('permissions')
-      .preload('roles')
-      .where('id', res.id as number)
-      .first()
-    return user as AdminUser
+    return res
   }
 
   public static isAdmin(user: AdminUser) {

@@ -41,3 +41,20 @@ export function handleTree(data: any[], idKey: string, parentIdKey: string, chil
   }
   return tree
 }
+
+export function matchRoute(rule: string, path: string) {
+  const regex = new RegExp(`^${rule.replace('*', '.*')}$`)
+  return regex.test(path)
+}
+
+export function paginate(data: any) {
+  if (!data.meta) {
+    data = data.serialize()
+  }
+  return {
+    page: data.meta.current_page,
+    total: data.meta.total,
+    limit: data.meta.per_page,
+    item: data.data,
+  }
+}
