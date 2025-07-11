@@ -16,6 +16,22 @@ export class RoleService {
     return res
   }
 
+  public static async createRole(data: any) {
+    const role = new AdminRole()
+    role.merge(data)
+    await role.save()
+    await AdminRolePermission.query().where('role_id', role.id).delete()
+    const permissions = [] as any
+    data.permissions.forEach((permissionId: number) => {
+      permissions.push({
+        roleId: role.id,
+        permissionId: permissionId,
+      })
+    })
+    await AdminRolePermission.createMany(permissions)
+    return true
+  }
+
   public static async updateRole(data: any) {
     const role = await AdminRole.find(data.id)
     if (!role) return false

@@ -8,6 +8,9 @@ export async function getPermissionPage(params: any) {
 export async function delPermissionById(id: number) {
   return axios.post('/api/permission/delete', { id })
 }
+export async function createPermission(data: any) {
+  return axios.post('/api/permission/create', data)
+}
 export async function updatePermission(data: any) {
   return axios.post('/api/permission/update', data)
 }

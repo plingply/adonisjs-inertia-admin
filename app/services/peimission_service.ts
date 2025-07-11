@@ -12,9 +12,18 @@ export class PeimissionService {
     return res
   }
 
+  public static async createPeimission(data: any) {
+    const permission = new AdminPermission()
+    data.http_method = data.http_method ? data.http_method.join(',') : null
+    permission.merge(data)
+    await permission.save()
+    return true
+  }
+
   public static async updatePeimission(data: any) {
     const permission = await AdminPermission.find(data.id)
     if (!permission) return false
+    data.http_method = data.http_method ? data.http_method.join(',') : null
     permission.merge(data)
     await permission.save()
     return true

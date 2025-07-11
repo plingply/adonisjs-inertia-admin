@@ -108,6 +108,10 @@ export default defineConfig({
       pattern: 'public/**',
       reloadServer: false,
     },
+    {
+      pattern: 'inertia/**',
+      reloadServer: true,
+    },
   ],
 
   assetsBundler: false,

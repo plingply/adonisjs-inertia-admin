@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ hidden: hidden }" flex justify-end pt-10>
+  <div flex justify-end pt-10>
     <el-pagination
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
@@ -7,7 +7,6 @@
       :layout="layout"
       :page-sizes="pageSizes"
       :total="total"
-      hide-on-single-page
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -46,10 +45,6 @@ const props = defineProps({
   autoScroll: {
     type: Boolean,
     default: true
-  },
-  hidden: {
-    type: Boolean,
-    default: false
   }
 })
 

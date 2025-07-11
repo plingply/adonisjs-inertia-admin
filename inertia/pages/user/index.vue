@@ -22,20 +22,21 @@
 
     <el-table v-loading="loading" :data="list" border>
       <el-table-column prop="id" label="ID" width="50" />
-      <el-table-column prop="name" label=" 名称" width="170" />
-      <el-table-column prop="slug" label="标识" width="170" />
-      <el-table-column prop="permissions" label="权限">
+      <el-table-column prop="name" label="名称" width="170" />
+      <el-table-column prop="username" label="账号" width="170"/>
+      <el-table-column prop="phone" label="电话" width="170" />
+      <el-table-column prop="roles" label="角色">
         <template #default="{ row }">
-          <el-tag
-            v-for="item in row.permissions"
-            type="primary"
-            class="mr-5 m-y-3"
-            >{{ item.name }}</el-tag
-          >
+          <el-tag v-for="role in row.roles" :key="role.id" m-r-10 m-y-5>{{ role.name }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="created_at" label="创建时间" width="170" />
-      <el-table-column prop="updated_at" label="更新时间" width="170" />
+      <el-table-column prop="roles" label="权限">
+        <template #default="{ row }">
+          <el-tag v-for="role in row.permissions" :key="role.id" m-r-10 m-y-5>{{ role.name }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="created_at" label="创建时间" width="170"/>
+      <el-table-column prop="updated_at" label="更新时间" width="170"/>
       <el-table-column prop="" label="操作" fixed="right" width="140">
         <template #default="{ row }">
           <el-button size="small" type="primary" @click="openEdit(row)">编辑</el-button>
@@ -52,9 +53,10 @@
     />
   </div>
 
-  <RoleEdit
+  <UserEdit
     v-model:show.sync="showEdit"
-    :data="currentRole"
+    :data="currentUser"
+    :roles="roles"
     :permissions="permissions"
     @submit="getList"
   />
@@ -64,15 +66,17 @@
 import Layout from '~/layout/layout.vue'
 import AdminRole from '#models/admin_role'
 import { ref, defineProps } from 'vue'
-import { getRolePage, delRoleById } from '~/api/role'
-import RoleEdit from './role-edit.vue'
-import AdminPermission from '#models/admin_permission'
+import UserEdit from './user-edit.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import AdminUser from '#models/admin_user'
+import { delUserById, getUserPage } from '~/api/user'
+import AdminPermission from '#models/admin_permission'
 
 defineOptions({ layout: Layout })
 const props = defineProps<{
-  permissions: AdminPermission[]
+  users: AdminUser[]
   roles: AdminRole[]
+  permissions: AdminPermission[]
   total: number
 }>()
 const queryParams = ref({
@@ -82,8 +86,8 @@ const queryParams = ref({
 })
 const total = ref(props.total)
 const loading = ref(false)
-const list = ref(props.roles)
-const currentRole = ref<AdminRole | null>(null)
+const list = ref(props.users)
+const currentUser = ref<AdminRole | null>(null)
 const showEdit = ref(false)
 const reset = () => {
   queryParams.value.page = 1
@@ -97,7 +101,7 @@ const searchFunc = () => {
 }
 const getList = () => {
   loading.value = true
-  getRolePage(queryParams.value)
+  getUserPage(queryParams.value)
     .then((res) => {
       list.value = res.data.data.item
       total.value = res.data.data.total
@@ -109,20 +113,20 @@ const getList = () => {
 
 const openEdit = (row: AdminRole) => {
   showEdit.value = true
-  currentRole.value = row
+  currentUser.value = row
 }
 const openAdd = () => {
   showEdit.value = true
-  currentRole.value = null
+  currentUser.value = null
 }
 
 const deleteRow = async (id) => {
-  ElMessageBox.confirm('是否确定删除角色?', '提示', {
+  ElMessageBox.confirm('是否确定删除用户?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    delRoleById(id).then((res) => {
+    delUserById(id).then((res) => {
       if (res.data.code === 200) {
         ElMessage.success('删除成功')
         getList()

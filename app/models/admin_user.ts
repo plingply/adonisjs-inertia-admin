@@ -42,10 +42,21 @@ export default class AdminUser extends compose(BaseModel, AuthFinder) {
   @column()
   declare avatar: string | null
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare createdAt: DateTime | null
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare updatedAt: DateTime | null
 
   @manyToMany(() => AdminPermission, {

@@ -1,23 +1,24 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="编辑角色" width="800px" @open="onOpen">
-    <el-form ref="roleFormRef" label-width="80px">
-      <el-form-item label="角色名称">
-        <el-input v-model="roleForm.name"></el-input>
+  <el-dialog v-model="dialogVisible" title="编辑权限" width="800px" @open="onOpen">
+    <el-form ref="formRef" label-width="80px">
+      <el-form-item label="权限名称">
+        <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="标识">
-        <el-input v-model="roleForm.slug"></el-input>
+        <el-input v-model="form.slug"></el-input>
       </el-form-item>
-      <el-form-item label="权限">
-        <el-transfer
-          v-model="roleForm.permissions"
-          :data="permissions"
-          style="width: 100%;"
-          :titles="['待选权限', '已选权限']"
-          :props="{
-            key: 'id',
-            label: 'name',
-          }"
-        />
+      <el-form-item label="方法">
+        <el-select v-model="form.http_method" multiple>
+          <el-option label="GET" value="GET"></el-option>
+          <el-option label="POST" value="POST"></el-option>
+          <el-option label="PUT" value="PUT"></el-option>
+          <el-option label="DELETE" value="DELETE"></el-option>
+          <el-option label="PATCH" value="PATCH"></el-option>
+          <el-option label="OPTIONS" value="OPTIONS"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="路由">
+        <el-input v-model="form.http_path" type="textarea" :rows="4"></el-input>
       </el-form-item>
       <el-form-item label="">
         <el-button type="primary" @click="saveRoleData">提交</el-button>
@@ -29,16 +30,14 @@
 
 <script setup lang="ts">
 import { ref, defineEmits, computed } from 'vue'
-import AdminPermission from '#models/admin_permission';
-import { ElMessage } from 'element-plus';
-import { updateRole } from '~/api/role';
+import { ElMessage } from 'element-plus'
+import { updatePermission, createPermission } from '~/api/permission'
 const emit = defineEmits(['update:show', 'submit'])
 const props = defineProps<{
-  role: any
-  permissions: AdminPermission[]
+  data: any
   show: boolean
 }>()
-const roleFormRef = ref()
+const formRef = ref()
 
 const dialogVisible = computed({
   get() {
@@ -48,11 +47,12 @@ const dialogVisible = computed({
     emit('update:show', val)
   },
 })
-const roleForm = ref({
+const form = ref({
   id: 0,
   name: '',
   slug: '',
-  permissions: [],
+  http_method: '',
+  http_path: '',
 })
 
 const close = () => {
@@ -60,22 +60,44 @@ const close = () => {
 }
 
 const onOpen = () => {
-  roleForm.value.id = props.role.id
-  roleForm.value.name = props.role.name
-  roleForm.value.slug = props.role.slug
-  roleForm.value.permissions = props.role.permissions.map((item: any) => item.id)
+  if (!props.data) {
+    form.value = {
+      id: 0,
+      name: '',
+      slug: '',
+      http_method: '',
+      http_path: '',
+    }
+    return
+  }
+  form.value.id = props.data.id
+  form.value.name = props.data.name
+  form.value.slug = props.data.slug
+  form.value.http_method = props.data.http_method.split(',')
+  form.value.http_path = props.data.http_path
 }
 
 const saveRoleData = () => {
-  if (!roleForm.value?.id) return ElMessage.error('请选择要修改的菜单')
-  updateRole(roleForm.value).then((res) => {
-    if (res.data.code === 200) {
-      ElMessage.success('更新成功')
-      close()
-      emit('submit')
-    } else {
-      ElMessage.error('修改失败')
-    }
-  })
+  if (!form.value?.id) {
+    createPermission(form.value).then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success('更新成功')
+        close()
+        emit('submit')
+      } else {
+        ElMessage.error('修改失败')
+      }
+    })
+  } else {
+    updatePermission(form.value).then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success('更新成功')
+        close()
+        emit('submit')
+      } else {
+        ElMessage.error('修改失败')
+      }
+    })
+  }
 }
 </script>

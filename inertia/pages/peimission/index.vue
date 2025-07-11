@@ -1,6 +1,7 @@
 <template>
   <div bg-white p-20 v-loading="loading" min-h-500px>
-    <el-form inline :model="queryParams">
+    <div flex justify-between>
+      <el-form inline :model="queryParams">
       <el-form-item prop="keyword">
         <el-input
           v-model="queryParams.search"
@@ -14,6 +15,10 @@
         <el-button @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
+    <div>
+      <el-button type="primary" @click=" openAdd">新增</el-button>
+    </div>
+    </div>
 
     <el-table v-loading="loading" :data="list" border>
       <el-table-column prop="id" label="ID" width="50" />
@@ -22,7 +27,7 @@
       <el-table-column prop="http_method" label="方法" />
       <el-table-column prop="http_path" label="路由">
         <template #default="{ row }">
-          {{ row.http_path }}
+          <div v-html="formartHttpPath(row.http_path)"></div>
         </template>
       </el-table-column>
       <el-table-column prop="created_at" label="创建时间" width="170" />
@@ -42,6 +47,11 @@
       @pagination="getList"
     />
   </div>
+  <PermissionsEdit
+    v-model:show.sync="showEdit"
+    :data="currentPermission"
+    @submit="getList"
+  />
 </template>
 
 <script setup lang="ts">
@@ -109,5 +119,16 @@ const deleteRow = async (id: number) => {
       }
     })
   })
+}
+
+const formartHttpPath = (path: string) => {
+  if(!path) return ''
+  path = path.replace(/\r/g, '')
+  return path.split('\n').join('<br>')
+}
+
+const openAdd = () => {
+  showEdit.value = true
+  currentPermission.value = null
 }
 </script>

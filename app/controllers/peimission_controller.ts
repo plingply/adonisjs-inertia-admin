@@ -38,4 +38,12 @@ export default class PeimissionController extends Controller {
     if (!res) return this.error('更新失败')
     return this.success()
   }
+
+  public async create({ request }: HttpContext) {
+    const data = request.all()
+    delete data.id
+    const res = await PeimissionService.createPeimission(data)
+    if (!res) return this.error('创建失败')
+    return this.success()
+  }
 }

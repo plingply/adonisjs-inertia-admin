@@ -14,6 +14,7 @@ const AuthController = () => import('#controllers/auth_controller')
 const MenuController = () => import('#controllers/menu_controller')
 const RoleController = () => import('#controllers/role_controller')
 const PeimissionController = () => import('#controllers/peimission_controller')
+const UserController = () => import('#controllers/user_controller')
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router.get('/test', async () => {
@@ -29,6 +30,7 @@ router
         router.get('/menu', [MenuController, 'index'])
         router.get('/role', [RoleController, 'index'])
         router.get('/peimission', [PeimissionController, 'index'])
+        router.get('/user', [UserController, 'index'])
       })
       .prefix('/settings')
   })
@@ -51,10 +53,17 @@ router
         router.get('/role/list', [RoleController, 'list'])
         router.post('/role/update', [RoleController, 'update'])
         router.post('/role/delete', [RoleController, 'delete'])
+        router.post('/role/create', [RoleController, 'create'])
 
         router.get('/permission/list', [PeimissionController, 'list'])
         router.post('/permission/update', [PeimissionController, 'update'])
         router.post('/permission/delete', [PeimissionController, 'delete'])
+        router.post('/permission/create', [PeimissionController, 'create'])
+
+        router.get('/user/list', [UserController, 'list'])
+        router.post('/user/update', [UserController, 'update'])
+        router.post('/user/delete', [UserController, 'delete'])
+        router.post('/user/create', [UserController, 'create'])
       })
       .use(middleware.auth())
       .use(middleware.rotuePermission())
