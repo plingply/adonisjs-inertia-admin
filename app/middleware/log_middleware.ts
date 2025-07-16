@@ -1,3 +1,4 @@
+import AdminOperationLog from '#models/admin_operation_log'
 import { HttpContext } from '@adonisjs/core/http'
 import { NextFn } from '@adonisjs/core/types/http'
 
@@ -10,14 +11,14 @@ import { NextFn } from '@adonisjs/core/types/http'
  */
 export default class LogMiddleware {
   handle(ctx: HttpContext, next: NextFn) {
-    ctx.logger.info(
-      'method: ' +
-        ctx.request.method() +
-        ' url:' +
-        ctx.request.url() +
-        ' request:' +
-        JSON.stringify(ctx.request.all())
-    )
+    console.log('LogMiddleware: ', ctx.auth)
+    const model = new AdminOperationLog()
+    model.userId = ctx.auth.user?.id || 0
+    model.method = ctx.request.method()
+    model.path = ctx.request.url(true)
+    model.ip = ctx.request.ip()
+    model.input = JSON.stringify(ctx.request.body())
+    model.save()
     return next()
   }
 }

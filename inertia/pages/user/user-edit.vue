@@ -53,7 +53,7 @@ const ruleFormRef = ref<FormInstance>()
 const rules = reactive({
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-  password: [{ required: !props.data?.id, message: '请输入密码', trigger: 'blur' }],
+  password: [] as any,
 })
 const dialogVisible = computed({
   get() {
@@ -78,9 +78,6 @@ const close = () => {
 }
 
 const onOpen = () => {
-  rules.password = !props.data?.id
-    ? [{ required: true, message: '请输入密码', trigger: 'blur' }]
-    : []
   if (!props.data) {
     form.value = {
       id: 0,
@@ -91,6 +88,7 @@ const onOpen = () => {
       roles: [] as number[],
       permissions: [] as number[],
     }
+    rules.password.push({ required: true, message: '请输入密码', trigger: 'blur' })
     return
   }
   form.value.id = props.data.id

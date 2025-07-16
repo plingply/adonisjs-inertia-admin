@@ -1,10 +1,10 @@
 <template>
   <el-dialog v-model="dialogVisible" title="编辑权限" width="800px" @open="onOpen">
-    <el-form ref="formRef" label-width="80px">
-      <el-form-item label="权限名称">
+    <el-form ref="formRef" label-width="80px" :rules="rules" :model="form">
+      <el-form-item label="权限名称" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
-      <el-form-item label="标识">
+      <el-form-item label="标识" prop="slug">
         <el-input v-model="form.slug"></el-input>
       </el-form-item>
       <el-form-item label="方法">
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, computed } from 'vue'
+import { ref, defineEmits, computed, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { updatePermission, createPermission } from '~/api/permission'
 const emit = defineEmits(['update:show', 'submit'])
@@ -53,6 +53,10 @@ const form = ref({
   slug: '',
   http_method: '',
   http_path: '',
+})
+const rules = reactive({
+  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+  slug: [{ required: true, message: '请输入标识', trigger: 'blur' }],
 })
 
 const close = () => {
@@ -78,26 +82,30 @@ const onOpen = () => {
 }
 
 const saveRoleData = () => {
-  if (!form.value?.id) {
-    createPermission(form.value).then((res) => {
-      if (res.data.code === 200) {
-        ElMessage.success('更新成功')
-        close()
-        emit('submit')
-      } else {
-        ElMessage.error('修改失败')
-      }
-    })
-  } else {
-    updatePermission(form.value).then((res) => {
-      if (res.data.code === 200) {
-        ElMessage.success('更新成功')
-        close()
-        emit('submit')
-      } else {
-        ElMessage.error('修改失败')
-      }
-    })
-  }
+  if (!formRef.value) return
+  formRef.value.validate((valid: boolean) => {
+    if (!valid) return
+    if (!form.value?.id) {
+      createPermission(form.value).then((res) => {
+        if (res.data.code === 200) {
+          ElMessage.success('更新成功')
+          close()
+          emit('submit')
+        } else {
+          ElMessage.error('修改失败')
+        }
+      })
+    } else {
+      updatePermission(form.value).then((res) => {
+        if (res.data.code === 200) {
+          ElMessage.success('更新成功')
+          close()
+          emit('submit')
+        } else {
+          ElMessage.error('修改失败')
+        }
+      })
+    }
+  })
 }
 </script>

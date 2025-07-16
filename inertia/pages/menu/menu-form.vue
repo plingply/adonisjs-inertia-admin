@@ -1,6 +1,6 @@
 <template>
-  <el-form label-width="80px">
-    <el-form-item label="菜单父级">
+  <el-form ref="menuFormRef" label-width="80px" :rules="rules" :model="form">
+    <el-form-item label="菜单父级" prop="parent_id">
       <el-tree-select
         v-model="form.parent_id"
         :data="rootMenus"
@@ -16,7 +16,7 @@
         }"
       />
     </el-form-item>
-    <el-form-item label="菜单名称">
+    <el-form-item label="菜单名称" prop="title">
       <el-input v-model="form.title" maxlength="10"></el-input>
     </el-form-item>
     <el-form-item label="菜单图标">
@@ -35,10 +35,10 @@
         </div>
       </el-popover>
     </el-form-item>
-    <el-form-item label="菜单路由">
+    <el-form-item label="菜单路由" prop="uri">
       <el-input v-model="form.uri" placeholder="请填写完整路由"></el-input>
     </el-form-item>
-    <el-form-item label="菜单排序">
+    <el-form-item label="菜单排序" prop="order">
       <el-input v-model="form.order"></el-input>
     </el-form-item>
     <el-form-item label="权限">
@@ -70,8 +70,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject, reactive } from 'vue'
 
+const menuFormRef = ref()
 const menus = inject<any[]>('menus')
 const permissions = inject<any[]>('permissions')
 const roles = inject<any[]>('roles')
@@ -96,6 +97,12 @@ const rootMenus = computed(() => {
       children: menus,
     },
   ]
+})
+const rules = reactive({
+  parent_id: [{ required: true, message: '请选择父级菜单', trigger: 'blur' }],
+  title: [{ required: true, message: '请选择输入菜单名称', trigger: 'blur' }],
+  uri: [{ required: true, message: '请输入路由', trigger: 'blur' }],
+  order: [{ required: true, message: '请输入排序', trigger: 'blur' }],
 })
 
 const initForm = (data?: any) => {
@@ -122,7 +129,12 @@ const initForm = (data?: any) => {
   }
 }
 const createMenuData = () => {
-  emit('submit', form.value)
+  if (!menuFormRef.value) return
+  menuFormRef.value.validate((valid: boolean) => {
+    if (valid) {
+      emit('submit', form.value)
+    }
+  })
 }
 
 defineExpose({

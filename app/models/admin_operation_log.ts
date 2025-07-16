@@ -1,5 +1,7 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import AdminUser from './admin_user.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class AdminOperationLog extends BaseModel {
   @column({ isPrimary: true })
@@ -25,4 +27,10 @@ export default class AdminOperationLog extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  @belongsTo(() => AdminUser, {
+    foreignKey: 'userId',
+    localKey: 'id',
+  })
+  declare user: BelongsTo<typeof AdminUser>
 }

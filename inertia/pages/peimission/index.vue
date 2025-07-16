@@ -2,32 +2,41 @@
   <div bg-white p-20 v-loading="loading" min-h-500px>
     <div flex justify-between>
       <el-form inline :model="queryParams">
-      <el-form-item prop="keyword">
-        <el-input
-          v-model="queryParams.search"
-          placeholder="请输入名称查询"
-          maxlength="50"
-          @keydown.enter="searchFunc"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="searchFunc">查询</el-button>
-        <el-button @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <div>
-      <el-button type="primary" @click=" openAdd">新增</el-button>
-    </div>
+        <el-form-item prop="keyword">
+          <el-input
+            v-model="queryParams.search"
+            placeholder="请输入名称查询"
+            maxlength="50"
+            @keydown.enter="searchFunc"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchFunc">查询</el-button>
+          <el-button @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
+      <div>
+        <el-button type="primary" @click="openAdd">新增</el-button>
+      </div>
     </div>
 
     <el-table v-loading="loading" :data="list" border>
       <el-table-column prop="id" label="ID" width="50" />
-      <el-table-column prop="name" label=" 名称" width="170" />
+      <el-table-column prop="name" label="名称" width="170" />
       <el-table-column prop="slug" label="标识" width="170" />
-      <el-table-column prop="http_method" label="方法" />
       <el-table-column prop="http_path" label="路由">
         <template #default="{ row }">
-          <div v-html="formartHttpPath(row.http_path)"></div>
+          <div v-for="item in formartHttpPath(row.http_path)">
+            <div m-y-4px>
+              <template v-if="row.http_method">
+                <template v-for="tag in row.http_method?.split(',')">
+                  <el-tag size="mini" m-r-4px>{{ tag }}</el-tag>
+                </template>
+              </template>
+              <el-tag v-else size="mini" m-r-4px>ANY</el-tag>
+              <span>{{ item }}</span>
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="created_at" label="创建时间" width="170" />
@@ -47,11 +56,7 @@
       @pagination="getList"
     />
   </div>
-  <PermissionsEdit
-    v-model:show.sync="showEdit"
-    :data="currentPermission"
-    @submit="getList"
-  />
+  <PermissionsEdit v-model:show.sync="showEdit" :data="currentPermission" @submit="getList" />
 </template>
 
 <script setup lang="ts">
@@ -122,9 +127,9 @@ const deleteRow = async (id: number) => {
 }
 
 const formartHttpPath = (path: string) => {
-  if(!path) return ''
+  if (!path) return ''
   path = path.replace(/\r/g, '')
-  return path.split('\n').join('<br>')
+  return path.split('\n')
 }
 
 const openAdd = () => {

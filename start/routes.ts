@@ -15,6 +15,7 @@ const MenuController = () => import('#controllers/menu_controller')
 const RoleController = () => import('#controllers/role_controller')
 const PeimissionController = () => import('#controllers/peimission_controller')
 const UserController = () => import('#controllers/user_controller')
+const OperationLogsController = () => import('#controllers/operation_logs_controller')
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router.get('/test', async () => {
@@ -31,17 +32,19 @@ router
         router.get('/role', [RoleController, 'index'])
         router.get('/peimission', [PeimissionController, 'index'])
         router.get('/user', [UserController, 'index'])
+        router.get('/operation_logs', [OperationLogsController, 'index'])
       })
       .prefix('/settings')
   })
   .use(middleware.auth())
+  .use(middleware.log())
   .use(middleware.rotuePermission())
   .use(middleware.shareData())
 
 // api
 router
   .group(() => {
-    router.post('/login', [AuthController, 'login'])
+    router.post('/login', [AuthController, 'login']).use(middleware.log())
     router
       .group(() => {
         router.get('/menu/tree', [MenuController, 'menuTree'])
@@ -66,6 +69,7 @@ router
         router.post('/user/create', [UserController, 'create'])
       })
       .use(middleware.auth())
+      .use(middleware.log())
       .use(middleware.rotuePermission())
   })
   .prefix('/api')
