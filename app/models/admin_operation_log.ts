@@ -22,10 +22,21 @@ export default class AdminOperationLog extends BaseModel {
   @column()
   declare input: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare createdAt: DateTime | null
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
   declare updatedAt: DateTime | null
 
   @belongsTo(() => AdminUser, {

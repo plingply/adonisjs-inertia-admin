@@ -67,6 +67,8 @@ router
         router.post('/user/update', [UserController, 'update'])
         router.post('/user/delete', [UserController, 'delete'])
         router.post('/user/create', [UserController, 'create'])
+
+        router.get('/operation_logs/list', [OperationLogsController, 'list'])
       })
       .use(middleware.auth())
       .use(middleware.log())

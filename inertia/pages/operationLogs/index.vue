@@ -18,10 +18,9 @@
     </div>
 
     <el-table v-loading="loading" :data="list" border>
-      <el-table-column prop="id" label="ID" width="50" />
-      <el-table-column prop="user_id" label="用户ID" width="50" />
+      <el-table-column prop="user_id" label="用户ID" width="70" />
       <el-table-column prop="user.name" label="用户名称" width="100" />
-      <el-table-column prop="method" label="请求方法" width="70"/>
+      <el-table-column prop="method" label="请求方法" width="90"/>
       <el-table-column prop="ip" label="IP" width="100" />
       <el-table-column prop="path" label="访问路径" />
       <el-table-column prop="input" label="输入" />
@@ -41,8 +40,8 @@
 <script setup lang="ts">
 import Layout from '~/layout/layout.vue'
 import { ref, defineProps } from 'vue'
-import { getPermissionPage } from '~/api/permission'
 import AdminOperationLog from '#models/admin_operation_log'
+import { getOperationLogsPage } from '~/api/operation_logs'
 
 defineOptions({ layout: Layout })
 const props = defineProps<{
@@ -69,7 +68,7 @@ const searchFunc = () => {
 }
 const getList = () => {
   loading.value = true
-  getPermissionPage(queryParams.value)
+  getOperationLogsPage(queryParams.value)
     .then((res) => {
       list.value = res.data.data.item
       total.value = res.data.data.total
