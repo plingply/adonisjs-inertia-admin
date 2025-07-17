@@ -106,12 +106,13 @@ const rules = reactive({
 })
 
 const initForm = (data?: any) => {
+ 
   if (data) {
     form.value = {
       title: data.title,
       icon: data.icon,
       uri: data.uri,
-      parent_id: data.parentId,
+      parent_id: data.parent_id,
       order: data.order,
       permission: data.permission,
       roles: data.roles.map((item: any) => item.id),

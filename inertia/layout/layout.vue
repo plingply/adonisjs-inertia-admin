@@ -56,6 +56,7 @@ const activeMenu = computed(() => {
   return props.path || '/'
 })
 const menuSelect = (url: string) => {
+  console.log('menuSelect', url)
   if (!url) return
   location.href = url
 }

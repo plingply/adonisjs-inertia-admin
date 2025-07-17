@@ -111,6 +111,7 @@ const formatTreeNodeToArray = (tree: any[]) => {
         title: item.title,
         permission: item.permission,
         icon: item.icon,
+        uri: item.uri,
         path: item.path,
         order: item.order,
       })
@@ -125,6 +126,7 @@ const formatTreeNodeToArray = (tree: any[]) => {
 
 const saveMenuData = () => {
   const data = formatTreeNodeToArray(formatNodeParentId(menus.value))
+  console.log('data: ', data)
   saveMenu(data).then((res) => {
     if (res.data.code == 200) {
       ElMessage.success('保存成功')
