@@ -11,7 +11,6 @@ import { NextFn } from '@adonisjs/core/types/http'
  */
 export default class LogMiddleware {
   handle(ctx: HttpContext, next: NextFn) {
-    console.log('LogMiddleware: ', ctx.auth)
     if (ctx.request.url().includes('operation_logs')) return next()
     const model = new AdminOperationLog()
     model.userId = ctx.auth.user?.id || 0

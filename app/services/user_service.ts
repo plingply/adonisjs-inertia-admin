@@ -2,6 +2,7 @@ import AdminRoleUser from '#models/admin_role_user'
 import AdminUser from '#models/admin_user'
 import AdminUserPermission from '#models/admin_user_permission'
 import hash from '@adonisjs/core/services/hash'
+import logger from '@adonisjs/core/services/logger'
 
 export class UserService {
   public static async getUserPage(page: number, limit: number, search: string) {
@@ -26,6 +27,7 @@ export class UserService {
   }
 
   public static async updateUser(data: any) {
+    logger.info('updateUser: %o', data)
     const user = await AdminUser.find(data.id)
     if (!user) return false
     if (data.password) {
