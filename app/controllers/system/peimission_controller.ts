@@ -1,7 +1,7 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Controller from '../controller.js'
 import { paginate } from '../../utils/index.js'
-import { PeimissionService } from '#services/peimission_service'
+import { PeimissionService } from '#services/system/peimission_service'
 
 export default class PeimissionController extends Controller {
   public async index({ request, inertia }: HttpContext) {

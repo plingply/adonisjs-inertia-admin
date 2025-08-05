@@ -1,5 +1,5 @@
-import AdminRole from '#models/admin_role'
-import AdminRolePermission from '#models/admin_role_permission'
+import AdminRole from '#models/system/admin_role'
+import AdminRolePermission from '#models/system/admin_role_permission'
 
 export class RoleService {
   public static async getAllRole() {

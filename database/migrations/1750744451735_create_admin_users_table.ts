@@ -16,8 +16,9 @@ export default class extends BaseSchema {
       table.string('password', 200).notNullable()
       table.string('name', 190).defaultTo(null)
       table.string('avatar', 190).defaultTo(null)
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
+      table.timestamp('deleted_at').nullable()
     })
   }
 

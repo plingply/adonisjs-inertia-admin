@@ -1,9 +1,9 @@
-import AdminPermission from '#models/admin_permission'
-import { AuthService } from '#services/auth_service'
+import AdminPermission from '#models/system/admin_permission'
+import { AuthService } from '#services/system/auth_service'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { matchRoute } from '../utils/index.js'
-import { MenuService } from '#services/menu_service'
+import { MenuService } from '#services/system/menu_service'
 
 /**
  * Silent auth middleware can be used as a global middleware to silent check

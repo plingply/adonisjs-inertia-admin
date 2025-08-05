@@ -1,4 +1,4 @@
-import AdminOperationLog from '#models/admin_operation_log'
+import AdminOperationLog from '#models/system/admin_operation_log'
 
 export class OperationLogsService {
   public static async getPage(page: number, limit: number, search: string) {

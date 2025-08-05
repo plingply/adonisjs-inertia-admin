@@ -1,4 +1,4 @@
-import AdminUser from '#models/admin_user'
+import AdminUser from '#models/system/admin_user'
 
 export class AuthService {
   public static async login(username: string, password: string) {

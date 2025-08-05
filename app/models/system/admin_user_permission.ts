@@ -1,9 +1,10 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import Model from '../public/model.js'
 
-export default class AdminRolePermission extends BaseModel {
+export default class AdminUserPermission extends Model {
   @column()
-  declare roleId: number
+  declare userId: number
 
   @column()
   declare permissionId: number

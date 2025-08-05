@@ -1,8 +1,8 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Controller from '../controller.js'
-import { RoleService } from '#services/role_service'
+import { RoleService } from '#services/system/role_service'
 import { paginate } from '../../utils/index.js'
-import AdminPermission from '#models/admin_permission'
+import AdminPermission from '#models/system/admin_permission'
 import { CreateRoleValidator, UpdateRoleValidator } from '#validators/role'
 
 export default class RoleController extends Controller {

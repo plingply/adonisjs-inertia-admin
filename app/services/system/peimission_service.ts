@@ -1,6 +1,6 @@
-import AdminPermission from '#models/admin_permission'
-import AdminRolePermission from '#models/admin_role_permission'
-import AdminUserPermission from '#models/admin_user_permission'
+import AdminPermission from '#models/system/admin_permission'
+import AdminRolePermission from '#models/system/admin_role_permission'
+import AdminUserPermission from '#models/system/admin_user_permission'
 
 export class PeimissionService {
   public static async getPeimissionPage(page: number, limit: number, search: string) {

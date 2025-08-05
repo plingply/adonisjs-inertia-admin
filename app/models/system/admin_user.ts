@@ -1,4 +1,4 @@
-import { BaseModel, column, computed, manyToMany } from '@adonisjs/lucid/orm'
+import { column, computed, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import hash from '@adonisjs/core/services/hash'
@@ -7,14 +7,15 @@ import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import AdminPermission from './admin_permission.js'
 import AdminRole from './admin_role.js'
-import { AuthService } from '#services/auth_service'
+import { AuthService } from '#services/system/auth_service'
+import SoftDeleteTesModel from '#models/public/soft_delete_model'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['username'],
   passwordColumnName: 'password',
 })
 
-export default class AdminUser extends compose(BaseModel, AuthFinder) {
+export default class AdminUser extends compose(SoftDeleteTesModel, AuthFinder) {
   static rememberMeTokens = DbRememberMeTokensProvider.forModel(AdminUser, {
     table: 'admin_remember_me_tokens',
   })
@@ -59,6 +60,13 @@ export default class AdminUser extends compose(BaseModel, AuthFinder) {
     },
   })
   declare updatedAt: DateTime | null
+
+  @column.dateTime({
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
+  declare deletedAt: DateTime | null
 
   @manyToMany(() => AdminPermission, {
     localKey: 'id',

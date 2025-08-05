@@ -1,8 +1,8 @@
 import { column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import Model from './model.js'
+import SoftDeleteTesModel from '#models/public/soft_delete_model'
 
-export default class AdminPermission extends Model {
+export default class AdminPermission extends SoftDeleteTesModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -34,4 +34,11 @@ export default class AdminPermission extends Model {
     },
   })
   declare updatedAt: DateTime | null
+
+  @column.dateTime({
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
+  declare deletedAt: DateTime | null
 }

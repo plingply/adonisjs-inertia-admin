@@ -1,4 +1,4 @@
-import { AuthService } from '#services/auth_service'
+import { AuthService } from '#services/system/auth_service'
 import { loguinValidator } from '#validators/auth'
 import { HttpContext } from '@adonisjs/core/http'
 import Controller from '../controller.js'

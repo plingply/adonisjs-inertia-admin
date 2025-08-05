@@ -1,9 +1,10 @@
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import { belongsTo, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import AdminUser from './admin_user.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Model from '../public/model.js'
 
-export default class AdminOperationLog extends BaseModel {
+export default class AdminOperationLog extends Model {
   @column({ isPrimary: true })
   declare id: number
 

@@ -1,9 +1,10 @@
-import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import { column, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import AdminRole from './admin_role.js'
+import SoftDeleteTesModel from '#models/public/soft_delete_model'
 
-export default class AdminMenu extends BaseModel {
+export default class AdminMenu extends SoftDeleteTesModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -30,6 +31,13 @@ export default class AdminMenu extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  @column.dateTime({
+    serialize: (value: DateTime | null) => {
+      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
+    },
+  })
+  declare deletedAt: DateTime | null
 
   @manyToMany(() => AdminRole, {
     localKey: 'id',

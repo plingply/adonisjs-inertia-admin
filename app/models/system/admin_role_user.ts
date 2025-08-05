@@ -1,12 +1,13 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import Model from '../public/model.js'
 
-export default class AdminRoleMenu extends BaseModel {
+export default class AdminRoleUser extends Model {
   @column()
   declare roleId: number
 
   @column()
-  declare menuId: number
+  declare userId: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null

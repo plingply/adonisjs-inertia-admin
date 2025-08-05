@@ -1,6 +1,6 @@
-import AdminRoleUser from '#models/admin_role_user'
-import AdminUser from '#models/admin_user'
-import AdminUserPermission from '#models/admin_user_permission'
+import AdminRoleUser from '#models/system/admin_role_user'
+import AdminUser from '#models/system/admin_user'
+import AdminUserPermission from '#models/system/admin_user_permission'
 import hash from '@adonisjs/core/services/hash'
 
 export class UserService {

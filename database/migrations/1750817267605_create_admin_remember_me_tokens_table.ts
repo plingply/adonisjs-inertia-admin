@@ -9,8 +9,8 @@ export default class extends BaseSchema {
       table.string('hash', 200)
       table.integer('tokenable_id')
       table.timestamp('expires_at')
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 

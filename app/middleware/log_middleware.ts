@@ -1,4 +1,4 @@
-import AdminOperationLog from '#models/admin_operation_log'
+import AdminOperationLog from '#models/system/admin_operation_log'
 import { HttpContext } from '@adonisjs/core/http'
 import { NextFn } from '@adonisjs/core/types/http'
 

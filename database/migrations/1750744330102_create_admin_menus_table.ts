@@ -12,8 +12,9 @@ export default class extends BaseSchema {
       table.string('icon', 50).nullable()
       table.string('uri', 191).nullable()
       table.string('permission', 191).nullable()
-      table.timestamp('created_at').defaultTo(null)
-      table.timestamp('updated_at').defaultTo(null)
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
+      table.timestamp('deleted_at').nullable()
     })
   }
 

@@ -9,8 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
-import AdminRole from '#models/admin_role'
-import AdminUser from '#models/admin_user'
+import AdminUser from '#models/system/admin_user'
 const AuthController = () => import('#controllers/system/auth_controller')
 const MenuController = () => import('#controllers/system/menu_controller')
 const RoleController = () => import('#controllers/system/role_controller')

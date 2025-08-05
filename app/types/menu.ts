@@ -1,4 +1,4 @@
-import AdminMenu from '#models/admin_menu'
+import AdminMenu from '#models/system/admin_menu'
 
 export interface MenuItem extends AdminMenu {
   children?: MenuItem[]

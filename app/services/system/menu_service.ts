@@ -1,11 +1,11 @@
-import AdminMenu from '#models/admin_menu'
-import AdminRoleMenu from '#models/admin_role_menu'
-import AdminUser from '#models/admin_user'
-import { handleTree } from '../utils/index.js'
+import AdminMenu from '#models/system/admin_menu'
+import AdminRoleMenu from '#models/system/admin_role_menu'
+import AdminUser from '#models/system/admin_user'
+import { handleTree } from '../../utils/index.js'
 import fs from 'node:fs'
 import path from 'node:path'
 import { AuthService } from './auth_service.js'
-import { MenuItem } from '../types/menu.js'
+import { MenuItem } from '../../types/menu.js'
 
 export class MenuService {
   public static publicMenus = ['/login', '/api/login', '/no-permission']

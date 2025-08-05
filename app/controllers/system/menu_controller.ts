@@ -1,8 +1,8 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Controller from '../controller.js'
-import { MenuService } from '#services/menu_service'
-import AdminPermission from '#models/admin_permission'
-import AdminRole from '#models/admin_role'
+import { MenuService } from '#services/system/menu_service'
+import AdminPermission from '#models/system/admin_permission'
+import AdminRole from '#models/system/admin_role'
 export default class MenuController extends Controller {
   public async index({ inertia }: HttpContext) {
     const menus = await MenuService.getAllMenuToTree()

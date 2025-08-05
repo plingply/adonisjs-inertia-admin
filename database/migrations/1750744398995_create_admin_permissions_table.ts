@@ -10,8 +10,9 @@ export default class extends BaseSchema {
       table.string('slug', 50).notNullable().unique({ indexName: 'admin_permissions_slug_unique' })
       table.string('http_method', 191).defaultTo(null)
       table.text('http_path').defaultTo(null)
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
+      table.timestamp('deleted_at').nullable()
     })
   }
 

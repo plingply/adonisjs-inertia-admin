@@ -1,9 +1,9 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Controller from '../controller.js'
 import { paginate } from '../../utils/index.js'
-import { UserService } from '#services/user_service'
-import AdminRole from '#models/admin_role'
-import AdminPermission from '#models/admin_permission'
+import { UserService } from '#services/system/user_service'
+import AdminRole from '#models/system/admin_role'
+import AdminPermission from '#models/system/admin_permission'
 import { CreateUserValidator, UpdateUserValidator } from '#validators/user'
 
 export default class UserController extends Controller {
