@@ -10,7 +10,7 @@ export default class OperationLogsController extends Controller {
     const search = request.input('search', '')
     const logs = await OperationLogsService.getPage(page, limit, search)
     const data = paginate(logs)
-    return inertia.render('operationLogs/index', {
+    return inertia.render('settings/operationLogs/index', {
       list: data.item,
       total: data.total,
     })

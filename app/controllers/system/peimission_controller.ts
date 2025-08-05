@@ -10,7 +10,7 @@ export default class PeimissionController extends Controller {
     const search = request.input('search', '')
     const peimissions = await PeimissionService.getPeimissionPage(page, limit, search)
     const data = paginate(peimissions)
-    return inertia.render('peimission/index', {
+    return inertia.render('settings/peimission/index', {
       peimissions: data.item,
       total: data.total,
     })

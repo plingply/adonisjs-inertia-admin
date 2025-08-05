@@ -9,7 +9,7 @@ export default class MenuController extends Controller {
     const permissions = await AdminPermission.query()
     const roles = await AdminRole.query()
     const icons = await MenuService.getAllMenuIcons()
-    return inertia.render('menu/index', {
+    return inertia.render('settings/menu/index', {
       menus,
       permissions,
       roles,

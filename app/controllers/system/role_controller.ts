@@ -13,7 +13,7 @@ export default class RoleController extends Controller {
     const roles = await RoleService.getRolePage(page, limit, search)
     const data = paginate(roles)
     const permissions = await AdminPermission.all()
-    return inertia.render('role/index', {
+    return inertia.render('settings/role/index', {
       roles: data.item,
       total: data.total,
       permissions,
