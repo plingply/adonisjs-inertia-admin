@@ -1,5 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
-import Controller from './controller.js'
+import Controller from '../controller.js'
 import { MenuService } from '#services/menu_service'
 import AdminPermission from '#models/admin_permission'
 import AdminRole from '#models/admin_role'

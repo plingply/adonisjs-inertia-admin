@@ -1,8 +1,9 @@
 export default class Controller {
-  public success(data: any = null) {
+  public success(data: any = null, message: string = '操作成功') {
     return {
       code: 200,
       data,
+      message,
     }
   }
 

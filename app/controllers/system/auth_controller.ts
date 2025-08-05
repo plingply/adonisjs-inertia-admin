@@ -1,7 +1,7 @@
 import { AuthService } from '#services/auth_service'
 import { loguinValidator } from '#validators/auth'
 import { HttpContext } from '@adonisjs/core/http'
-import Controller from './controller.js'
+import Controller from '../controller.js'
 export default class AuthController extends Controller {
   public async login({ request, auth, session }: HttpContext) {
     const payload = await loguinValidator.validate(request.all())

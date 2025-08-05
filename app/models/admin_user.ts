@@ -7,6 +7,7 @@ import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import AdminPermission from './admin_permission.js'
 import AdminRole from './admin_role.js'
+import { AuthService } from '#services/auth_service'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['username'],
@@ -90,5 +91,15 @@ export default class AdminUser extends compose(BaseModel, AuthFinder) {
       permissions.push(...item)
     })
     return [...new Set(permissions)]
+  }
+
+  public hasRole(role: string | string[]) {
+    if (!role || !role.length) return false
+    return AuthService.hasRole(this, role)
+  }
+
+  public hasPermission(permission: string | string[]) {
+    if (!permission || !permission.length) return false
+    return AuthService.hasPermissions(this, permission)
   }
 }

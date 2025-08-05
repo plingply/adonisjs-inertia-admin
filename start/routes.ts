@@ -10,16 +10,24 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import AdminRole from '#models/admin_role'
-const AuthController = () => import('#controllers/auth_controller')
-const MenuController = () => import('#controllers/menu_controller')
-const RoleController = () => import('#controllers/role_controller')
-const PeimissionController = () => import('#controllers/peimission_controller')
-const UserController = () => import('#controllers/user_controller')
-const OperationLogsController = () => import('#controllers/operation_logs_controller')
+import AdminUser from '#models/admin_user'
+const AuthController = () => import('#controllers/system/auth_controller')
+const MenuController = () => import('#controllers/system/menu_controller')
+const RoleController = () => import('#controllers/system/role_controller')
+const PeimissionController = () => import('#controllers/system/peimission_controller')
+const UserController = () => import('#controllers/system/user_controller')
+const OperationLogsController = () => import('#controllers/system/operation_logs_controller')
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router.get('/test', async () => {
-  return AdminRole.all()
+  const user = await AdminUser.query()
+    .preload('permissions')
+    .preload('roles')
+    .where('username', 'admin')
+    .first()
+  return {
+    data: user?.hasRole('school_admin'),
+  }
 })
 
 router
