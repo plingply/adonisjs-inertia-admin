@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import Layout from '~/layout/layout.vue'
 import { ref, defineProps } from 'vue'
-import AdminOperationLog from '#models/admin_operation_log'
+import type AdminOperationLog from '#models/system/admin_operation_log'
 import { getOperationLogsPage } from '~/api/operation_logs'
 
 defineOptions({ layout: Layout })

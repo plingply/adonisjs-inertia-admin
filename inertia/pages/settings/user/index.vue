@@ -63,14 +63,14 @@
 </template>
 
 <script setup lang="ts">
+import type AdminRole from '#models/system/admin_role'
+import type AdminUser from '#models/system/admin_user'
+import type AdminPermission from '#models/system/admin_permission'
 import Layout from '~/layout/layout.vue'
-import AdminRole from '#models/admin_role'
 import { ref, defineProps } from 'vue'
 import UserEdit from './user-edit.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import AdminUser from '#models/admin_user'
 import { delUserById, getUserPage } from '~/api/user'
-import AdminPermission from '#models/admin_permission'
 
 defineOptions({ layout: Layout })
 const props = defineProps<{

@@ -63,7 +63,7 @@
 import Layout from '~/layout/layout.vue'
 import { ref, defineProps } from 'vue'
 import PermissionsEdit from './permission-edit.vue'
-import AdminPermission from '#models/admin_permission'
+import type AdminPermission from '#models/system/admin_permission'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { delPermissionById, getPermissionPage } from '~/api/permission'
 

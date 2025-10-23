@@ -15,7 +15,7 @@ export default class UserController extends Controller {
     const data = paginate(users)
     const roles = await AdminRole.all()
     const permissions = await AdminPermission.all()
-    return inertia.render('user/index', {
+    return inertia.render('settings/user/index', {
       users: data.item,
       total: data.total,
       roles: roles,

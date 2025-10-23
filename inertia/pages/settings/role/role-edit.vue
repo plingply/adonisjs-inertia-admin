@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { ref, defineEmits, computed, reactive } from 'vue'
-import AdminPermission from '#models/admin_permission'
+import type AdminPermission from '#models/system/admin_permission'
 import { ElMessage } from 'element-plus'
 import { updateRole, createRole } from '~/api/role'
 const emit = defineEmits(['update:show', 'submit'])

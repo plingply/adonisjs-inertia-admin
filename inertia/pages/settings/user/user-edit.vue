@@ -38,9 +38,9 @@
 
 <script setup lang="ts">
 import { ref, defineEmits, computed, reactive } from 'vue'
-import AdminPermission from '#models/admin_permission'
+import type AdminPermission from '#models/system/admin_permission'
+import type AdminRole from '#models/system/admin_role'
 import { ElMessage, FormInstance } from 'element-plus'
-import AdminRole from '#models/admin_role'
 import { createUser, updateUser } from '~/api/user'
 const emit = defineEmits(['update:show', 'submit'])
 const props = defineProps<{

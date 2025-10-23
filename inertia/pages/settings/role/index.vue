@@ -62,11 +62,11 @@
 
 <script setup lang="ts">
 import Layout from '~/layout/layout.vue'
-import AdminRole from '#models/admin_role'
+import type AdminRole from '#models/system/admin_role'
+import type AdminPermission from '#models/system/admin_permission'
 import { ref, defineProps } from 'vue'
 import { getRolePage, delRoleById } from '~/api/role'
 import RoleEdit from './role-edit.vue'
-import AdminPermission from '#models/admin_permission'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 defineOptions({ layout: Layout })

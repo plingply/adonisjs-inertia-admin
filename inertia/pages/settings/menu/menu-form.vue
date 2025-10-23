@@ -106,7 +106,7 @@ const rules = reactive({
 })
 
 const initForm = (data?: any) => {
- 
+
   if (data) {
     form.value = {
       title: data.title,
