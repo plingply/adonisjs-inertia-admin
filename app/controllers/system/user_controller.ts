@@ -4,7 +4,7 @@ import { paginate } from '../../utils/index.js'
 import { UserService } from '#services/system/user_service'
 import AdminRole from '#models/system/admin_role'
 import AdminPermission from '#models/system/admin_permission'
-import { CreateUserValidator, UpdateUserValidator } from '#validators/user'
+import { CreateUserValidator, DeleteUserValidator, UpdateUserValidator } from '#validators/user'
 
 export default class UserController extends Controller {
   public async index({ request, inertia }: HttpContext) {
@@ -33,9 +33,8 @@ export default class UserController extends Controller {
   }
 
   public async delete({ request }: HttpContext) {
-    const id = request.input('id')
-    if (!id) return this.error('参数错误')
-    const res = await UserService.deleteUserById(id)
+    const payload = await DeleteUserValidator.validate(request.all())
+    const res = await UserService.deleteUserById(payload.id)
     if (!res) return this.error('删除失败')
     return this.success()
   }

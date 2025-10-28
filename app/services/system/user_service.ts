@@ -1,6 +1,5 @@
-import AdminRoleUser from '#models/system/admin_role_user'
 import AdminUser from '#models/system/admin_user'
-import AdminUserPermission from '#models/system/admin_user_permission'
+import CasbinService from '#services/casbin_service'
 import hash from '@adonisjs/core/services/hash'
 
 export class UserService {
@@ -15,13 +14,13 @@ export class UserService {
 
   public static async createUser(data: any) {
     const user = new AdminUser()
-    data.password = await hash.make(data.password)
     user.merge(data)
     await user.save()
+
     // 创建权限
-    await this.createUserPermission(data.permissions, user.id)
+    await this.createUserPermission(data.permissions, user.username)
     // 创建角色
-    await this.createUserRole(data.roles, user.id)
+    await this.createUserRole(data.roles, user.username)
     return true
   }
 
@@ -33,43 +32,35 @@ export class UserService {
     }
     user.merge(data)
     await user.save()
+
     // 创建权限
-    await this.createUserPermission(data.permissions, user.id)
+    await this.createUserPermission(data.permissions, user.username)
     // 创建角色
-    await this.createUserRole(data.roles, user.id)
+    await this.createUserRole(data.roles, user.username)
     return true
   }
 
   public static async deleteUserById(id: number) {
     const user = await AdminUser.find(id)
     if (!user) return false
-    await user.delete()
-    await AdminUserPermission.query().where('user_id', user.id).delete()
-    await AdminRoleUser.query().where('user_id', user.id).delete()
+    const casbinService = new CasbinService()
+    await casbinService.deleteRolesForUser(user.username)
     return true
   }
 
-  public static async createUserPermission(permissionIds: number[], userId: number) {
-    await AdminUserPermission.query().where('user_id', userId).delete()
-    const permissions = [] as any
-    permissionIds.forEach((permissionId: number) => {
-      permissions.push({
-        userId: userId,
-        permissionId: permissionId,
-      })
-    })
-    await AdminUserPermission.createMany(permissions)
+  public static async createUserPermission(permissions: string[], username: string) {
+    const casbinService = new CasbinService()
+    await casbinService.deletePermissionsForUser(username)
+    for (const permission of permissions) {
+      await casbinService.addPermissionForUser(username, permission)
+    }
   }
 
-  public static async createUserRole(roleIds: number[], userId: number) {
-    await AdminRoleUser.query().where('user_id', userId).delete()
-    const roles = [] as any
-    roleIds.forEach((roleId: number) => {
-      roles.push({
-        userId: userId,
-        roleId: roleId,
-      })
-    })
-    await AdminRoleUser.createMany(roles)
+  public static async createUserRole(roles: string[], username: string) {
+    const casbinService = new CasbinService()
+    await casbinService.deleteRolesForUser(username)
+    for (const role of roles) {
+      await casbinService.addGroupingPolicy(username, role)
+    }
   }
 }

@@ -69,45 +69,26 @@ export default class AdminUser extends compose(SoftDeleteTesModel, AuthFinder) {
   declare deletedAt: DateTime | null
 
   @manyToMany(() => AdminPermission, {
-    localKey: 'id',
-    pivotForeignKey: 'user_id',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'permission_id',
-    pivotTable: 'admin_user_permissions',
+    localKey: 'username',
+    pivotForeignKey: 'v0',
+    relatedKey: 'slug',
+    pivotRelatedForeignKey: 'v1',
+    pivotTable: 'casbin_rules',
     pivotTimestamps: true,
   })
   declare permissions: ManyToMany<typeof AdminPermission>
 
   @manyToMany(() => AdminRole, {
-    localKey: 'id',
-    pivotForeignKey: 'user_id',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'role_id',
-    pivotTable: 'admin_role_users',
+    localKey: 'username',
+    pivotForeignKey: 'v0',
+    relatedKey: 'slug',
+    pivotRelatedForeignKey: 'v1',
+    pivotTable: 'casbin_rules',
     pivotTimestamps: true,
   })
   declare roles: ManyToMany<typeof AdminRole>
 
-  @computed()
-  get allPermissions() {
-    const permissions = this.permissions?.map((item: AdminPermission) => item.slug) || []
-    const rolesPermissions =
-      this.roles?.map(
-        (item) => item.permissions?.map((list: AdminPermission) => list.slug) || []
-      ) || []
-    rolesPermissions.forEach((item) => {
-      permissions.push(...item)
-    })
-    return [...new Set(permissions)]
-  }
-
-  public hasRole(role: string | string[]) {
-    if (!role || !role.length) return false
-    return AuthService.hasRole(this, role)
-  }
-
-  public hasPermission(permission: string | string[]) {
-    if (!permission || !permission.length) return false
-    return AuthService.hasPermissions(this, permission)
+  isAdmin(): boolean {
+    return AuthService.isAdmin(this)
   }
 }

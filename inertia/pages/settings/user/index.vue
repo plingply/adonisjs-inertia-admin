@@ -27,12 +27,12 @@
       <el-table-column prop="phone" label="电话" width="170" />
       <el-table-column prop="roles" label="角色">
         <template #default="{ row }">
-          <el-tag v-for="role in row.roles" :key="role.id" m-r-10 m-y-5>{{ role.name }}</el-tag>
+          <el-tag v-for="role in row.roles" :key="role.slug" m-r-10 m-y-5>{{ role.name }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="roles" label="权限">
         <template #default="{ row }">
-          <el-tag v-for="role in row.permissions" :key="role.id" m-r-10 m-y-5>{{ role.name }}</el-tag>
+          <el-tag v-for="role in row.permissions" :key="role.slug" m-r-10 m-y-5>{{ role.name }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="created_at" label="创建时间" width="170"/>

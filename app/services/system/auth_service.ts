@@ -10,23 +10,14 @@ export class AuthService {
     return !!user.roles?.find((item) => item.slug === 'administrator')
   }
 
-  public static hasAllPermissions(user: AdminUser) {
-    return user.allPermissions.includes('*')
-  }
-
   public static hasRole(user: AdminUser, role: string | string[]) {
-    if (!role) return false
-    if (Array.isArray(role)) {
-      return user.roles?.some((item) => role.includes(item.slug))
-    }
-    return user.roles?.some((item) => item.slug === role)
+    // TODO
+    return true
   }
 
   public static hasPermissions(user: AdminUser, permission: string | string[]) {
     if (!permission) return false
-    if (Array.isArray(permission)) {
-      return user.allPermissions.some((item) => permission.includes(item))
-    }
-    return user.allPermissions.some((item) => item === permission)
+    // TODO
+    return true
   }
 }

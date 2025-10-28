@@ -12,6 +12,9 @@ export default class AdminMenu extends SoftDeleteTesModel {
   declare parentId: number | null
 
   @column()
+  declare slug: string
+
+  @column()
   declare order: number | null
 
   @column()
@@ -40,11 +43,11 @@ export default class AdminMenu extends SoftDeleteTesModel {
   declare deletedAt: DateTime | null
 
   @manyToMany(() => AdminRole, {
-    localKey: 'id',
-    pivotForeignKey: 'menu_id',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'role_id',
-    pivotTable: 'admin_role_menus',
+    localKey: 'slug',
+    pivotForeignKey: 'v1',
+    relatedKey: 'slug',
+    pivotRelatedForeignKey: 'v0',
+    pivotTable: 'casbin_rules',
     pivotTimestamps: true,
   })
   declare roles: ManyToMany<typeof AdminRole>

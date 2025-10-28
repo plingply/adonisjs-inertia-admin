@@ -3,6 +3,7 @@ import Controller from '../controller.js'
 import { MenuService } from '#services/system/menu_service'
 import AdminPermission from '#models/system/admin_permission'
 import AdminRole from '#models/system/admin_role'
+import { CreateMenuValidator, DeleteMenuValidator, UpdateMenuValidator } from '#validators/menu'
 export default class MenuController extends Controller {
   public async index({ inertia }: HttpContext) {
     const menus = await MenuService.getAllMenuToTree()
@@ -33,20 +34,20 @@ export default class MenuController extends Controller {
   }
 
   public async delMenuById({ request }: HttpContext) {
-    const id = request.input('id')
-    await MenuService.delMenuById(id)
+    const payload = await DeleteMenuValidator.validate(request.all())
+    await MenuService.delMenuById(payload.id)
     return this.success()
   }
 
   public async create({ request }: HttpContext) {
-    const data = request.all()
-    await MenuService.createMenu(data)
+    const payload = await CreateMenuValidator.validate(request.all())
+    await MenuService.createMenu(payload)
     return this.success()
   }
 
   public async update({ request }: HttpContext) {
-    const data = request.all()
-    await MenuService.updateMenu(data)
+    const payload = await UpdateMenuValidator.validate(request.all())
+    await MenuService.updateMenu(payload)
     return this.success()
   }
 }

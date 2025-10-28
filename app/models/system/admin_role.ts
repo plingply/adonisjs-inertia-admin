@@ -39,11 +39,11 @@ export default class AdminRole extends SoftDeleteTesModel {
   declare deletedAt: DateTime | null
 
   @manyToMany(() => AdminPermission, {
-    localKey: 'id',
-    pivotForeignKey: 'role_id',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'permission_id',
-    pivotTable: 'admin_role_permissions',
+    localKey: 'slug',
+    pivotForeignKey: 'v0',
+    relatedKey: 'slug',
+    pivotRelatedForeignKey: 'v1',
+    pivotTable: 'casbin_rules',
     pivotTimestamps: true,
   })
   declare permissions: ManyToMany<typeof AdminPermission>

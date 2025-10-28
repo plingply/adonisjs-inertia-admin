@@ -6,8 +6,8 @@ export const CreateUserValidator = vine.compile(
     name: vine.string(),
     password: vine.string(),
     phone: vine.string().optional(),
-    roles: vine.array(vine.number()).optional(),
-    permissions: vine.array(vine.number()).optional(),
+    roles: vine.array(vine.string()).optional(),
+    permissions: vine.array(vine.string()).optional(),
   })
 )
 
@@ -17,7 +17,13 @@ export const UpdateUserValidator = vine.compile(
     username: vine.string(),
     password: vine.string().optional(),
     phone: vine.string().optional(),
-    roles: vine.array(vine.number()).optional(),
-    permissions: vine.array(vine.number()).optional(),
+    roles: vine.array(vine.string()).optional(),
+    permissions: vine.array(vine.string()).optional(),
+  })
+)
+
+export const DeleteUserValidator = vine.compile(
+  vine.object({
+    id: vine.number(),
   })
 )

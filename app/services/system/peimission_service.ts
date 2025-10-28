@@ -1,6 +1,6 @@
 import AdminPermission from '#models/system/admin_permission'
-import AdminRolePermission from '#models/system/admin_role_permission'
-import AdminUserPermission from '#models/system/admin_user_permission'
+import CasbinService from '#services/casbin_service'
+import { PermissionCreateReq, PermissionUpdateReq } from '#types/permission'
 
 export class PeimissionService {
   public static async getPeimissionPage(page: number, limit: number, search: string) {
@@ -12,29 +12,51 @@ export class PeimissionService {
     return res
   }
 
-  public static async createPeimission(data: any) {
-    const permission = new AdminPermission()
-    data.http_method = data.http_method ? data.http_method.join(',') : null
-    permission.merge(data)
-    await permission.save()
+  public static async createPeimission(data: PermissionCreateReq) {
+    const permissionModel = new AdminPermission()
+    permissionModel.name = data.name
+    permissionModel.slug = data.slug
+    permissionModel.permissions = JSON.stringify(data.permissions)
+    await permissionModel.save()
+    const casbinService = new CasbinService()
+    if (data.permissions && data.permissions.length > 0) {
+      for (const permission of data.permissions) {
+        for (const method of permission.http_method) {
+          await casbinService.addPolicy(data.slug, permission.http_path, method)
+        }
+      }
+    } else {
+      await casbinService.addPolicy(data.slug, '*', '*')
+    }
     return true
   }
 
-  public static async updatePeimission(data: any) {
-    const permission = await AdminPermission.find(data.id)
-    if (!permission) return false
-    data.http_method = data.http_method ? data.http_method.join(',') : null
-    permission.merge(data)
-    await permission.save()
+  public static async updatePeimission(data: PermissionUpdateReq) {
+    const permissionModel = await AdminPermission.find(data.id)
+    if (!permissionModel) return false
+    permissionModel.name = data.name
+    permissionModel.permissions = JSON.stringify(data.permissions)
+    await permissionModel.save()
+    const casbinService = new CasbinService()
+    await casbinService.deletePermissionsForUser(permissionModel.slug)
+    if (data.permissions && data.permissions.length > 0) {
+      for (const permission of data.permissions) {
+        for (const method of permission.http_method) {
+          await casbinService.addPolicy(permissionModel.slug, permission.http_path, method)
+        }
+      }
+    } else {
+      await casbinService.addPolicy(permissionModel.slug, null, null)
+    }
     return true
   }
 
   public static async deletePeimissionById(id: number) {
-    const permission = await AdminPermission.find(id)
-    if (!permission) return false
-    await AdminRolePermission.query().where('permission_id', permission.id).delete()
-    await AdminUserPermission.query().where('permission_id', permission.id).delete()
-    await permission.delete()
+    const permissionModel = await AdminPermission.find(id)
+    if (!permissionModel) return false
+    await permissionModel.delete()
+    const casbinService = new CasbinService()
+    await casbinService.deletePermissionsForUser(permissionModel.slug)
     return true
   }
 }

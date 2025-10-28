@@ -1,3 +1,4 @@
+import { AuthService } from '#services/system/auth_service'
 import { MenuService } from '#services/system/menu_service'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
@@ -12,7 +13,7 @@ export default class ShareDataMiddleware {
   async handle({ inertia, auth, request }: HttpContext, next: NextFn) {
     let myMenus = []
     if (auth.user) {
-      myMenus = await MenuService.getMyMenuTree(auth.user)
+      myMenus = await MenuService.getUserMenuTree(auth.user.username, auth.user)
     }
     inertia.share({
       path: request.url(),

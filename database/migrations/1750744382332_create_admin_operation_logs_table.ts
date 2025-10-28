@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.string('path', 191).notNullable()
       table.string('method', 10).notNullable()
       table.string('ip', 15).notNullable()
-      table.string('input').notNullable()
+      table.text('input').notNullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

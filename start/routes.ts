@@ -10,6 +10,9 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import AdminUser from '#models/system/admin_user'
+import CasbinService from '#services/casbin_service'
+import AdminMenu from '#models/system/admin_menu'
+import { MenuService } from '#services/system/menu_service'
 const AuthController = () => import('#controllers/system/auth_controller')
 const MenuController = () => import('#controllers/system/menu_controller')
 const RoleController = () => import('#controllers/system/role_controller')
@@ -19,14 +22,56 @@ const OperationLogsController = () => import('#controllers/system/operation_logs
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router.get('/test', async () => {
-  const user = await AdminUser.query()
-    .preload('permissions')
-    .preload('roles')
-    .where('username', 'admin')
-    .first()
+  //  const casbinService = new CasbinService()
+  // return {
+  //   data: await casbinService.deleteMenuPolicy()
+  // }
+  // const user = await AdminMenu.query()
+  //   .preload('roles')
+  // return {
+  //   data: user,
+  // }
+  const casbinService = new CasbinService()
+  const p = await casbinService.checkPermission('createUser', '/settings/operation_logs', 'GET')
+  // const menu = await MenuService.getUserMenuTree('createUser')
   return {
-    data: user?.hasRole('school_admin'),
+    data: p,
   }
+  // const enforcer = await casbinService.getEnforcer()
+  // const p = await enforcer.getFilteredNamedGroupingPolicy('g2', 0, '13')
+  // p.forEach((item) => {
+  //   console.log(item)
+  // })
+  // for (const item of p) {
+  //   await enforcer.removeNamedGroupingPolicy('g2', item[0], item[1])
+  // }
+  // const res = await enforcer.removeNamedGroupingPolicy('g2', '13')
+  // const res = await casbinService.checkPermission('13', '/users', 'GET')
+  return {
+    data: p,
+  }
+  // const res = await enforcer.getPermissionsForUser('alice')
+  // const res = await enforcer.getRolesForUser('alice')
+  // const res = await enforcer.addGroupingPolicy('penglin', 'admin')
+  // await enforcer.addPolicy('permission_1', '/users', 'GET')
+  // await enforcer.addPolicy('permission_2', '/info', 'GET')
+  // await enforcer.addPolicy('user1', '/create', 'POST')
+
+  // await enforcer.addGroupingPolicy('roles', 'permission_1')
+  // await enforcer.addGroupingPolicy('user1', 'roles')
+  // await enforcer.addGroupingPolicy('user1', 'permission_2')
+  // const res = await casbinService.checkPermission('user1', '/users', 'GET')
+  // const roles = await enforcer.getRolesForUser('user1')
+  // const permissions = await enforcer.getPermissionsForUser('user1')
+  // const rolesPermissions = await enforcer.getRolesForUser('roles')
+  // return {
+  //   data: {
+  //     hasPermission: res,
+  //     roles,
+  //     permissions,
+  //     rolesPermissions,
+  //   },
+  // }
 })
 
 router

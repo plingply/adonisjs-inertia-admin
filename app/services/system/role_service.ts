@@ -1,5 +1,6 @@
 import AdminRole from '#models/system/admin_role'
-import AdminRolePermission from '#models/system/admin_role_permission'
+import CasbinService from '#services/casbin_service'
+import { RoleUpdateReq, RoleCreateReq } from '#types/role'
 
 export class RoleService {
   public static async getAllRole() {
@@ -16,44 +17,36 @@ export class RoleService {
     return res
   }
 
-  public static async createRole(data: any) {
+  public static async createRole(data: RoleCreateReq) {
     const role = new AdminRole()
     role.merge(data)
     await role.save()
-    await AdminRolePermission.query().where('role_id', role.id).delete()
-    const permissions = [] as any
-    data.permissions.forEach((permissionId: number) => {
-      permissions.push({
-        roleId: role.id,
-        permissionId: permissionId,
-      })
-    })
-    await AdminRolePermission.createMany(permissions)
+    const casbinService = new CasbinService()
+    for (const permission of data.permissions) {
+      await casbinService.addGroupingPolicy(data.slug, permission)
+    }
     return true
   }
 
-  public static async updateRole(data: any) {
+  public static async updateRole(data: RoleUpdateReq) {
     const role = await AdminRole.find(data.id)
     if (!role) return false
-    role.merge(data)
+    role.name = data.name
     await role.save()
-    await AdminRolePermission.query().where('role_id', role.id).delete()
-    const permissions = [] as any
-    data.permissions.forEach((permission: number) => {
-      permissions.push({
-        roleId: role.id,
-        permissionId: permission,
-      })
-    })
-    await AdminRolePermission.createMany(permissions)
+    const casbinService = new CasbinService()
+    await casbinService.deleteRolesForUser(role.slug)
+    for (const permission of data.permissions) {
+      await casbinService.addGroupingPolicy(role.slug, permission)
+    }
     return true
   }
 
   public static async deleteRoleById(id: number) {
     const role = await AdminRole.find(id)
     if (!role) return false
-    await AdminRolePermission.query().where('role_id', role.id).delete()
     await role.delete()
+    const casbinService = new CasbinService()
+    await casbinService.deletePermissionsForUser(role.slug)
     return true
   }
 }

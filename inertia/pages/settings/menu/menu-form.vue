@@ -57,9 +57,9 @@
         <el-option label="请选择角色" value=""></el-option>
         <el-option
           v-for="item in roles"
-          :key="item.id"
+          :key="item.slug"
           :label="item.name"
-          :value="item.id"
+          :value="item.slug"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -87,7 +87,7 @@ const form = ref({
   parent_id: 0,
   order: 0,
   permission: '',
-  roles: [] as number[],
+  roles: [] as string[],
 })
 const rootMenus = computed(() => {
   return [
@@ -115,7 +115,7 @@ const initForm = (data?: any) => {
       parent_id: data.parent_id,
       order: data.order,
       permission: data.permission,
-      roles: data.roles.map((item: any) => item.id),
+      roles: data.roles.map((item: any) => item.slug),
     }
     return
   }

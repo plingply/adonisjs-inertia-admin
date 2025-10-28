@@ -6,13 +6,14 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.string('name', 50).notNullable().unique({ indexName: 'admin_permissions_name_unique' })
-      table.string('slug', 50).notNullable().unique({ indexName: 'admin_permissions_slug_unique' })
-      table.string('http_method', 191).defaultTo(null)
-      table.text('http_path').defaultTo(null)
+      table.string('name', 50).notNullable()
+      table.string('slug', 50).notNullable()
+      table.json('permissions').defaultTo(null)
       table.timestamp('created_at').nullable()
       table.timestamp('updated_at').nullable()
       table.timestamp('deleted_at').nullable()
+
+      table.unique(['slug', 'deleted_at'])
     })
   }
 

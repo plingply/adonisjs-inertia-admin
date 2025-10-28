@@ -1,19 +1,33 @@
-import { column } from '@adonisjs/lucid/orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import SoftDeleteTesModel from '#models/public/soft_delete_model'
+export default class CasbinRule extends BaseModel {
+  static table = 'casbin_rules'
 
-export default class AdminPermission extends SoftDeleteTesModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare name: string
+  declare ptype: string // 'p' for policy, 'g' for grouping
+
+  @column({
+    columnName: 'v0',
+  })
+  declare v0: string | null // user or role
 
   @column()
-  declare slug: string
+  declare v1: string | null // resource or role
 
   @column()
-  declare permissions: string | null
+  declare v2: string | null // action
+
+  @column()
+  declare v3: string | null // extra field
+
+  @column()
+  declare v4: string | null // extra field
+
+  @column()
+  declare v5: string | null // extra field
 
   @column.dateTime({
     autoCreate: true,
@@ -31,11 +45,4 @@ export default class AdminPermission extends SoftDeleteTesModel {
     },
   })
   declare updatedAt: DateTime | null
-
-  @column.dateTime({
-    serialize: (value: DateTime | null) => {
-      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
-    },
-  })
-  declare deletedAt: DateTime | null
 }

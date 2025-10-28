@@ -14,7 +14,7 @@
           style="width: 100%"
           :titles="['待选权限', '已选权限']"
           :props="{
-            key: 'id',
+            key: 'slug',
             label: 'name',
           }"
         />
@@ -77,7 +77,7 @@ const onOpen = () => {
   form.value.id = props.data.id
   form.value.name = props.data.name
   form.value.slug = props.data.slug
-  form.value.permissions = props.data?.permissions.map((item: any) => item.id)
+  form.value.permissions = props.data?.permissions.map((item: any) => item.slug)
 }
 
 const saveRoleData = () => {

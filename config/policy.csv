@@ -1,0 +1,7 @@
+p, bob, /users, GET
+p, data_group_admin, admin_role, GET
+p, alice, admin_role
+
+g, alice, data_group_admin
+g2, /admin, admin_role
+g2, /users, admin_role

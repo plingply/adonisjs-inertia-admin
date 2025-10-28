@@ -13,18 +13,18 @@
       <el-form-item label="密码" prop="password">
         <el-input v-model="form.password" type="password" maxlength="50"></el-input>
       </el-form-item>
-      <el-form-item label="权限">
+      <el-form-item label="角色">
         <el-select v-model="form.roles" placeholder="请选择角色" multiple>
-          <el-option v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
+          <el-option v-for="item in roles" :key="item.slug" :label="item.name" :value="item.slug" />
         </el-select>
       </el-form-item>
       <el-form-item label="权限">
         <el-select v-model="form.permissions" placeholder="请选择权限" multiple>
           <el-option
             v-for="item in permissions"
-            :key="item.id"
+            :key="item.slug"
             :label="item.name"
-            :value="item.id"
+            :value="item.slug"
           />
         </el-select>
       </el-form-item>
@@ -69,8 +69,8 @@ const form = ref({
   username: '',
   password: '',
   phone: '',
-  roles: [] as number[],
-  permissions: [] as number[],
+  roles: [] as string[],
+  permissions: [] as string[],
 })
 
 const close = () => {
@@ -85,8 +85,8 @@ const onOpen = () => {
       username: '',
       password: '',
       phone: '',
-      roles: [] as number[],
-      permissions: [] as number[],
+      roles: [] as string[],
+      permissions: [] as string[],
     }
     rules.password.push({ required: true, message: '请输入密码', trigger: 'blur' })
     return
@@ -96,8 +96,8 @@ const onOpen = () => {
   form.value.username = props.data.username
   form.value.phone = props.data.phone
   form.value.password = props.data.password
-  form.value.roles = props.data?.roles.map((item: any) => item.id)
-  form.value.permissions = props.data?.permissions.map((item: any) => item.id)
+  form.value.roles = props.data?.roles.map((item: any) => item.slug)
+  form.value.permissions = props.data?.permissions.map((item: any) => item.slug)
 }
 
 const saveRoleData = (formRef: FormInstance | undefined) => {

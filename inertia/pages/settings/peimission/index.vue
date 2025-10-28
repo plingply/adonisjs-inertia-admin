@@ -24,17 +24,17 @@
       <el-table-column prop="id" label="ID" width="50" />
       <el-table-column prop="name" label="名称" width="170" />
       <el-table-column prop="slug" label="标识" width="170" />
-      <el-table-column prop="http_path" label="路由">
+      <el-table-column prop="http_path" label="资源">
         <template #default="{ row }">
-          <div v-for="item in formartHttpPath(row.http_path)">
+          <div v-for="(item, index) in row.permissions" :key="index">
             <div m-y-4px>
-              <template v-if="row.http_method">
-                <template v-for="tag in row.http_method?.split(',')">
+              <template v-if="item.http_method && item.http_method.length > 0">
+                <template v-for="tag in item.http_method">
                   <el-tag size="mini" m-r-4px>{{ tag }}</el-tag>
                 </template>
               </template>
               <el-tag v-else size="mini" m-r-4px>ANY</el-tag>
-              <span>{{ item }}</span>
+              <span>{{ item.http_path }}</span>
             </div>
           </div>
         </template>
@@ -124,12 +124,6 @@ const deleteRow = async (id: number) => {
       }
     })
   })
-}
-
-const formartHttpPath = (path: string) => {
-  if (!path) return ''
-  path = path.replace(/\r/g, '')
-  return path.split('\n')
 }
 
 const openAdd = () => {

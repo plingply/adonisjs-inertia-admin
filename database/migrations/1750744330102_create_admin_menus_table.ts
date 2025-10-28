@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer('parent_id').defaultTo(0)
       table.integer('order').defaultTo(0)
+      table.string('slug').nullable()
       table.string('title', 50)
       table.string('icon', 50).nullable()
       table.string('uri', 191).nullable()

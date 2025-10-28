@@ -1,9 +1,9 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Controller from '../controller.js'
 import { RoleService } from '#services/system/role_service'
-import { paginate } from '../../utils/index.js'
+import { paginate } from '#utils/index'
 import AdminPermission from '#models/system/admin_permission'
-import { CreateRoleValidator, UpdateRoleValidator } from '#validators/role'
+import { CreateRoleValidator, DeleteRoleValidator, UpdateRoleValidator } from '#validators/role'
 
 export default class RoleController extends Controller {
   public async index({ request, inertia }: HttpContext) {
@@ -30,23 +30,21 @@ export default class RoleController extends Controller {
   }
 
   public async delete({ request }: HttpContext) {
-    const id = request.input('id')
-    const res = await RoleService.deleteRoleById(id)
+    const payload = await DeleteRoleValidator.validate(request.all())
+    const res = await RoleService.deleteRoleById(payload.id)
     if (!res) return this.error('删除失败')
     return this.success()
   }
 
   public async create({ request }: HttpContext) {
-    const data = request.all()
-    const payload = await CreateRoleValidator.validate(data)
+    const payload = await CreateRoleValidator.validate(request.all())
     const res = await RoleService.createRole(payload)
     if (!res) return this.error('创建失败')
     return this.success()
   }
 
   public async update({ request }: HttpContext) {
-    const data = request.all()
-    const payload = await UpdateRoleValidator.validate(data)
+    const payload = await UpdateRoleValidator.validate(request.all())
     const res = await RoleService.updateRole(payload)
     if (!res) return this.error('更新失败')
     return this.success()
