@@ -25,8 +25,6 @@ export class PeimissionService {
           await casbinService.addPolicy(data.slug, permission.http_path, method)
         }
       }
-    } else {
-      await casbinService.addPolicy(data.slug, '*', '*')
     }
     return true
   }
@@ -38,15 +36,13 @@ export class PeimissionService {
     permissionModel.permissions = JSON.stringify(data.permissions)
     await permissionModel.save()
     const casbinService = new CasbinService()
-    await casbinService.deletePermissionsForUser(permissionModel.slug)
+    await casbinService.deletePeimissionPolicys(permissionModel.slug)
     if (data.permissions && data.permissions.length > 0) {
       for (const permission of data.permissions) {
         for (const method of permission.http_method) {
           await casbinService.addPolicy(permissionModel.slug, permission.http_path, method)
         }
       }
-    } else {
-      await casbinService.addPolicy(permissionModel.slug, null, null)
     }
     return true
   }
@@ -54,9 +50,9 @@ export class PeimissionService {
   public static async deletePeimissionById(id: number) {
     const permissionModel = await AdminPermission.find(id)
     if (!permissionModel) return false
-    await permissionModel.delete()
     const casbinService = new CasbinService()
-    await casbinService.deletePermissionsForUser(permissionModel.slug)
+    await casbinService.deletePeimission(permissionModel.slug)
+    await permissionModel.delete()
     return true
   }
 }

@@ -23,7 +23,7 @@ export class RoleService {
     await role.save()
     const casbinService = new CasbinService()
     for (const permission of data.permissions) {
-      await casbinService.addGroupingPolicy(data.slug, permission)
+      await casbinService.addUserRole(data.slug, permission)
     }
     return true
   }
@@ -34,9 +34,9 @@ export class RoleService {
     role.name = data.name
     await role.save()
     const casbinService = new CasbinService()
-    await casbinService.deleteRolesForUser(role.slug)
+    await casbinService.deletePermissionsForRole(role.slug)
     for (const permission of data.permissions) {
-      await casbinService.addGroupingPolicy(role.slug, permission)
+      await casbinService.addPermissionForRole(role.slug, permission)
     }
     return true
   }
@@ -44,9 +44,9 @@ export class RoleService {
   public static async deleteRoleById(id: number) {
     const role = await AdminRole.find(id)
     if (!role) return false
-    await role.delete()
     const casbinService = new CasbinService()
-    await casbinService.deletePermissionsForUser(role.slug)
+    await casbinService.deleteRole(role.slug)
+    await role.delete()
     return true
   }
 }

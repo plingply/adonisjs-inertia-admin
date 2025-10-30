@@ -43,83 +43,101 @@ export default class CasbinService {
     return await enforcer.addPolicy(subject, object, action)
   }
 
-  // 删除策略
-  async deletePolicy(subject: string, object: string, action: string): Promise<boolean> {
+  // 删除权限
+  async deletePeimission(peimission: string): Promise<boolean> {
     const enforcer = await this.getEnforcer()
-    return await enforcer.removePolicy(subject, object, action)
-  }
-
-  // 添加用户权限
-  async addPermissionForUser(subject: string, object: string): Promise<boolean> {
-    const enforcer = await this.getEnforcer()
-    return await enforcer.addGroupingPolicy(subject, object)
-  }
-
-  // 获取用户权限
-  async getPermissionForUser(subject: string): Promise<string[]> {
-    const enforcer = await this.getEnforcer()
-    const permissions = await enforcer.getRolesForUser(subject)
-    return permissions.map((item) => item[1])
-  }
-
-  // 删除用户权限
-  async deletePermissionsForUser(subject: string, permissions?: string[]): Promise<boolean> {
-    const enforcer = await this.getEnforcer()
-    const userPermissions = await this.getPermissionForUser(subject)
-    for (const permission of userPermissions) {
-      if (!permissions) {
-        await enforcer.removeGroupingPolicy(subject, permission)
-      } else {
-        if (permissions.includes(permission)) {
-          await enforcer.removeGroupingPolicy(subject, permission)
-        }
-      }
-    }
+    // 删除 subject 权限策略
+    await enforcer.removeFilteredPolicy(0, peimission)
+    // 删除用户 subject 权限
+    await enforcer.removeFilteredNamedGroupingPolicy('g2', 1, peimission)
+    // 删除角色 subject 权限
+    await enforcer.removeFilteredGroupingPolicy(1, peimission)
     return true
   }
 
-  // 为用户分配角色
-  async addGroupingPolicy(userId: string, role: string): Promise<boolean> {
+  // 删除权限所有策略
+  async deletePeimissionPolicys(peimission: string): Promise<boolean> {
     const enforcer = await this.getEnforcer()
-    return await enforcer.addGroupingPolicy(userId, role)
+    return await enforcer.removeFilteredPolicy(0, peimission)
   }
 
-  // 获取用户的所有角色
-  async getRolesForUser(userId: string): Promise<string[]> {
+  // 添加用户权限
+  async addPermissionForUser(username: string, object: string): Promise<boolean> {
     const enforcer = await this.getEnforcer()
-    return await enforcer.getRolesForUser(userId)
+    return await enforcer.addNamedGroupingPolicy('g2', username, object)
   }
 
-  // 移除用户角色
-  async deleteRoleForUser(userId: string, role: string): Promise<boolean> {
+  // 删除用户权限
+  async deletePermissionForUser(username: string, object: string): Promise<boolean> {
     const enforcer = await this.getEnforcer()
-    return await enforcer.deleteRoleForUser(userId, role)
+    return await enforcer.removeNamedGroupingPolicy('g2', username, object)
   }
 
-  async deleteRolesForUser(userId: string): Promise<boolean> {
+  // 删除用户所有权限
+  async deletePermissionsForUser(username: string): Promise<boolean> {
     const enforcer = await this.getEnforcer()
-    return await enforcer.deleteRolesForUser(userId)
+    return await enforcer.removeFilteredNamedGroupingPolicy('g2', 0, username)
   }
 
-  // 添加菜单策略
-  async addMenuPolicy(subject: string, object: string, action: string): Promise<boolean> {
+  // 获取用户权限
+  async getPermissionForUser(username: string): Promise<string[]> {
     const enforcer = await this.getEnforcer()
-    return await enforcer.addPolicy(subject, object, action, 'menu')
+    const permissions = await enforcer.getFilteredNamedGroupingPolicy('g2', 0, username)
+    return permissions.map((permission) => permission[1])
   }
 
-  // 删除菜单策略
-  async deleteMenuPolicy(subject?: string): Promise<boolean> {
+  // 获取用户所有权限
+  async getAllPermissionForUser(username: string): Promise<string[]> {
     const enforcer = await this.getEnforcer()
-    if (subject) {
-      return await enforcer.removeFilteredPolicy(0, subject)
-    } else {
-      return await enforcer.removeFilteredPolicy(3, 'menu')
-    }
+    const permissions = await enforcer.getImplicitRolesForUser(username)
+    const roles = await this.getUserRoles(username)
+    return permissions.filter((permission) => {
+      return !roles.includes(permission)
+    })
   }
 
-  // 删除菜单权限或角色
-  async deleteMenuPermissionAndRole(subject: string): Promise<boolean> {
+  // 添加用户角色
+  async addUserRole(username: string, role: string): Promise<boolean> {
     const enforcer = await this.getEnforcer()
-    return await enforcer.removeFilteredGroupingPolicy(1, subject)
+    return await enforcer.addRoleForUser(username, role)
+  }
+  // 获取用户角色
+  async getUserRoles(username: string): Promise<string[]> {
+    const enforcer = await this.getEnforcer()
+    const roles = await enforcer.getRolesForUser(username)
+    return roles
+  }
+
+  // 删除用户角色
+  async deleteUserRole(username: string, role: string): Promise<boolean> {
+    const enforcer = await this.getEnforcer()
+    return await enforcer.deleteRoleForUser(username, role)
+  }
+
+  // 删除用户所有角色
+  async deleteRolesForUser(username: string): Promise<boolean> {
+    const enforcer = await this.getEnforcer()
+    return await enforcer.deleteRolesForUser(username)
+  }
+
+  // 删除角色所有权限
+  async deletePermissionsForRole(role: string): Promise<boolean> {
+    const enforcer = await this.getEnforcer()
+    return await enforcer.deleteRolesForUser(role)
+  }
+
+  // 添加角色权限
+  async addPermissionForRole(role: string, permission: string): Promise<boolean> {
+    const enforcer = await this.getEnforcer()
+    return await enforcer.addGroupingPolicy(role, permission)
+  }
+
+  // 删除角色
+  async deleteRole(role: string): Promise<boolean> {
+    const enforcer = await this.getEnforcer()
+    // 删除角色 （角色权限）
+    await enforcer.deleteRole(role)
+    // 删除用户角色
+    return await enforcer.removeFilteredGroupingPolicy(1, role)
   }
 }

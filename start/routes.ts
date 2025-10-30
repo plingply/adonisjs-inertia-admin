@@ -32,7 +32,9 @@ router.get('/test', async () => {
   //   data: user,
   // }
   const casbinService = new CasbinService()
-  const p = await casbinService.checkPermission('createUser', '/settings/operation_logs', 'GET')
+  // const p = await casbinService.checkPermission('user2', '/settings', 'GET')
+  // const p = await casbinService.addPolicy('permission1', '/logs', 'GET')
+  const p = await casbinService.deleteRole('role1')
   // const menu = await MenuService.getUserMenuTree('createUser')
   return {
     data: p,
