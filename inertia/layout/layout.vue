@@ -19,7 +19,7 @@
             {{ !isCollapse ? '收起' : '展开' }}
           </span>
         </div>
-        <div class="font-bold text-center flex-1 relative h-full">{{ user.name }}</div>
+        <div class="font-bold text-center flex-1 relative h-full">{{ user?.name }}</div>
       </div>
     </div>
     <div

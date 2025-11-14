@@ -19,11 +19,16 @@ export default class AuthMiddleware {
       guards?: (keyof Authenticators)[]
     } = {}
   ) {
-    await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
-    if (ctx.auth?.user) {
-      await ctx.auth.user.load('permissions')
-      await ctx.auth.user.load('roles', (query) => query.preload('permissions'))
+    try {
+      await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+      if (ctx.auth?.user) {
+        await ctx.auth.user.load('permissions')
+        await ctx.auth.user.load('roles', (query) => query.preload('permissions'))
+      }
+      return next()
+    } catch (error) {
+      console.log(error)
+      return ctx.response.redirect(this.redirectTo, true)
     }
-    return next()
   }
 }

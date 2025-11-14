@@ -1,11 +1,11 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="编辑角色" width="800px" @open="onOpen">
+  <el-dialog v-model="dialogVisible" :title="form.id ? '编辑角色' : '添加角色'" width="800px" @open="onOpen">
     <el-form ref="formRef" label-width="80px" :rules="rules" :model="form">
       <el-form-item label="角色名称" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="标识" prop="slug">
-        <el-input v-model="form.slug"></el-input>
+        <el-input v-model="form.slug" :disabled="form.id"></el-input>
       </el-form-item>
       <el-form-item label="权限">
         <el-transfer

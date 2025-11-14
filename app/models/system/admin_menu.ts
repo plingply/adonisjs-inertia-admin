@@ -1,7 +1,5 @@
-import { column, manyToMany } from '@adonisjs/lucid/orm'
+import { column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import type { ManyToMany } from '@adonisjs/lucid/types/relations'
-import AdminRole from './admin_role.js'
 import SoftDeleteTesModel from '#models/public/soft_delete_model'
 
 export default class AdminMenu extends SoftDeleteTesModel {
@@ -41,14 +39,4 @@ export default class AdminMenu extends SoftDeleteTesModel {
     },
   })
   declare deletedAt: DateTime | null
-
-  @manyToMany(() => AdminRole, {
-    localKey: 'slug',
-    pivotForeignKey: 'v1',
-    relatedKey: 'slug',
-    pivotRelatedForeignKey: 'v0',
-    pivotTable: 'casbin_rules',
-    pivotTimestamps: true,
-  })
-  declare roles: ManyToMany<typeof AdminRole>
 }

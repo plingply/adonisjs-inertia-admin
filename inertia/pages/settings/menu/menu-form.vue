@@ -52,17 +52,6 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="角色">
-      <el-select v-model="form.roles" style="width: 100%" multiple placeholder="请选择角色">
-        <el-option label="请选择角色" value=""></el-option>
-        <el-option
-          v-for="item in roles"
-          :key="item.slug"
-          :label="item.name"
-          :value="item.slug"
-        ></el-option>
-      </el-select>
-    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="createMenuData">保存</el-button>
     </el-form-item>
@@ -75,7 +64,6 @@ import { ref, computed, inject, reactive } from 'vue'
 const menuFormRef = ref()
 const menus = inject<any[]>('menus')
 const permissions = inject<any[]>('permissions')
-const roles = inject<any[]>('roles')
 const icons = inject<string[]>('icons')
 
 const emit = defineEmits(['submit'])
@@ -87,7 +75,6 @@ const form = ref({
   parent_id: 0,
   order: 0,
   permission: '',
-  roles: [] as string[],
 })
 const rootMenus = computed(() => {
   return [
@@ -115,7 +102,6 @@ const initForm = (data?: any) => {
       parent_id: data.parent_id,
       order: data.order,
       permission: data.permission,
-      roles: data.roles.map((item: any) => item.slug),
     }
     return
   }
@@ -126,7 +112,6 @@ const initForm = (data?: any) => {
     parent_id: 0,
     order: 0,
     permission: '',
-    roles: [],
   }
 }
 const createMenuData = () => {

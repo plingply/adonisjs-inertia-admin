@@ -14,13 +14,14 @@ import CasbinService from '#services/casbin_service'
 import AdminMenu from '#models/system/admin_menu'
 import { MenuService } from '#services/system/menu_service'
 const AuthController = () => import('#controllers/system/auth_controller')
+const IndexController = () => import('#controllers/index_controller')
 const MenuController = () => import('#controllers/system/menu_controller')
 const RoleController = () => import('#controllers/system/role_controller')
 const PeimissionController = () => import('#controllers/system/peimission_controller')
 const UserController = () => import('#controllers/system/user_controller')
 const OperationLogsController = () => import('#controllers/system/operation_logs_controller')
 
-router.on('/login').renderInertia('auth/login').use(middleware.guest())
+
 router.get('/test', async () => {
   //  const casbinService = new CasbinService()
   // return {
@@ -76,10 +77,11 @@ router.get('/test', async () => {
   // }
 })
 
+router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router
   .group(() => {
-    router.get('/', [MenuController, 'index'])
     router.on('/no-permission').renderInertia('errors/no_permission')
+    router.get('/', [IndexController, 'index'])
     router
       .group(() => {
         router.get('/menu', [MenuController, 'index'])
@@ -88,11 +90,11 @@ router
         router.get('/user', [UserController, 'index'])
         router.get('/operation_logs', [OperationLogsController, 'index'])
       })
+      .use(middleware.rotuePermission())
       .prefix('/settings')
   })
   .use(middleware.auth())
   .use(middleware.log())
-  .use(middleware.rotuePermission())
   .use(middleware.shareData())
 
 // api

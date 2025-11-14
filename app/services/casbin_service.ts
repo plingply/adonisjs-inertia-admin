@@ -88,12 +88,13 @@ export default class CasbinService {
 
   // 获取用户所有权限
   async getAllPermissionForUser(username: string): Promise<string[]> {
-    const enforcer = await this.getEnforcer()
-    const permissions = await enforcer.getImplicitRolesForUser(username)
+    const permissions = await this.getPermissionForUser(username)
     const roles = await this.getUserRoles(username)
-    return permissions.filter((permission) => {
-      return !roles.includes(permission)
-    })
+    for (const role of roles) {
+      const rolesPermissions = await this.getPermissionForRole(role)
+      permissions.push(...rolesPermissions)
+    }
+    return [...new Set(permissions)]
   }
 
   // 添加用户角色
@@ -130,6 +131,13 @@ export default class CasbinService {
   async addPermissionForRole(role: string, permission: string): Promise<boolean> {
     const enforcer = await this.getEnforcer()
     return await enforcer.addGroupingPolicy(role, permission)
+  }
+
+  // 获取角色权限
+  async getPermissionForRole(role: string): Promise<string[]> {
+    const enforcer = await this.getEnforcer()
+    const permissions = await enforcer.getImplicitRolesForUser(role)
+    return permissions
   }
 
   // 删除角色

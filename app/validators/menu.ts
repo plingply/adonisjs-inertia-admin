@@ -7,7 +7,6 @@ export const CreateMenuValidator = vine.compile(
     order: vine.number(),
     parent_id: vine.number(),
     permission: vine.string().optional(),
-    roles: vine.array(vine.string()).optional(),
     uri: vine.string(),
   })
 )
@@ -20,7 +19,6 @@ export const UpdateMenuValidator = vine.compile(
     order: vine.number(),
     parent_id: vine.number(),
     permission: vine.string().optional(),
-    roles: vine.array(vine.string()).optional(),
     uri: vine.string(),
   })
 )

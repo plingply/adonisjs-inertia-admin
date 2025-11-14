@@ -28,13 +28,13 @@
                 <el-icon class="w-16! text-16! text-center" @click="removeItem(index)">
                   <svg-icon icon-class="home" />
                 </el-icon>
-                <el-icon class="w-16! text-16! text-center" @click="addItem()">
-                  <svg-icon icon-class="collapse" />
-                </el-icon>
               </div>
             </el-col>
           </el-row>
         </template>
+        <div text-align-center>
+          <el-button type="primary" @click="addItem()">添加资源</el-button>
+        </div>
       </el-form-item>
       <el-form-item label="">
         <el-button type="primary" @click="saveRoleData">提交</el-button>

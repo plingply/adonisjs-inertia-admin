@@ -14,7 +14,7 @@ export class MenuService {
   }
 
   public static async getAllMenuToTree() {
-    const menus = await AdminMenu.query().preload('roles').orderBy('order', 'asc')
+    const menus = await AdminMenu.query().orderBy('order', 'asc')
     const menuArray = menus.map((item) => item.serialize())
     return handleTree(menuArray, 'id', 'parent_id', 'children')
   }
@@ -24,47 +24,23 @@ export class MenuService {
       return this.getAllMenuToTree()
     }
     const casbinService = new CasbinService()
-    const permissions = await casbinService.getPermissionForUser(username)
-    const roles = await casbinService.getRolesForUser(username)
-    let menuSlug = [] as string[]
-    for (const permission of permissions) {
-      const perarr = await casbinService.getRolesForUser(permission)
-      menuSlug = menuSlug.concat(perarr)
-    }
-    for (const role of roles) {
-      const perarr = await casbinService.getRolesForUser(role)
-      menuSlug = menuSlug.concat(perarr)
-    }
-    const menus = await AdminMenu.query().preload('roles').whereIn('slug', menuSlug)
+    const permissions = await casbinService.getAllPermissionForUser(username)
+    const menus = await AdminMenu.query()
+      .whereIn('permission', permissions)
+      .orWhereNull('permission')
+      .orderBy('order', 'asc')
     const menuArray = menus.map((item) => item.serialize())
     const tree = handleTree(menuArray, 'id', 'parent_id', 'children')
     return tree.filter((item) => item.parent_id === 0)
   }
 
   public static async saveMenuAll(menus: any[]) {
-    const casbinService = new CasbinService()
     // 新增菜单
     await AdminMenu.updateOrCreateMany(['id'], menus)
-    const allMenu = await AdminMenu.query().preload('roles').orderBy('order', 'asc')
+    const allMenu = await AdminMenu.query().orderBy('order', 'asc')
     for (const menu of allMenu) {
       menu.slug = `${menu.id}_${menu.parentId}`
       await menu.save()
-      await casbinService.deleteMenuPolicy(menu.slug)
-      await casbinService.deleteMenuPermissionAndRole(menu.slug)
-      if (menu.uri) {
-        await casbinService.addMenuPolicy(menu.slug, menu.uri, 'GET')
-      }
-      if (menu.uri) {
-        await casbinService.addMenuPolicy(menu.slug, menu.uri, 'GET')
-      }
-      if (menu.permission) {
-        await casbinService.addGroupingPolicy(menu.permission, menu.slug)
-      }
-      if (menu.roles && menu.roles.length > 0) {
-        for (const role of menu.roles) {
-          await casbinService.addGroupingPolicy(role.slug, menu.slug)
-        }
-      }
     }
     return true
   }
@@ -72,12 +48,6 @@ export class MenuService {
   public static async delMenuById(id: number) {
     const tree = await this.getAllMenuToTree()
     const ids = this.findChildrenIdsForTreeById(tree, id)
-    const menus = await AdminMenu.query().whereIn('id', ids).select('slug')
-    const casbinService = new CasbinService()
-    for (const item of menus) {
-      await casbinService.deleteMenuPolicy(item.slug)
-      await casbinService.deleteMenuPermissionAndRole(item.slug)
-    }
     await AdminMenu.query().whereIn('id', ids).delete()
     return true
   }
@@ -153,27 +123,12 @@ export class MenuService {
     const menu = await AdminMenu.create(data)
     menu.slug = `${menu.id}_${menu.parentId}`
     await menu.save()
-    const casbinService = new CasbinService()
-    if (menu.uri) {
-      await casbinService.addMenuPolicy(menu.slug, menu.uri, 'GET')
-    }
-    if (data.permission) {
-      await casbinService.addGroupingPolicy(data.permission, menu.slug)
-    }
-    if (data.roles && data.roles.length > 0) {
-      for (const role of data.roles) {
-        await casbinService.addGroupingPolicy(role, menu.slug)
-      }
-    }
     return true
   }
 
   public static async updateMenu(data: MenuUpdateReq) {
     const menu = await AdminMenu.query().where('id', data.id).first()
     if (!menu) return false
-    const casbinService = new CasbinService()
-    await casbinService.deleteMenuPolicy(menu.slug)
-    await casbinService.deleteMenuPermissionAndRole(menu.slug)
     menu.icon = data.icon
     menu.order = data.order
     menu.parentId = data.parent_id
@@ -182,17 +137,6 @@ export class MenuService {
     menu.uri = data.uri
     menu.slug = `${menu.id}_${menu.parentId}`
     await menu.save()
-    if (menu.uri) {
-      await casbinService.addMenuPolicy(menu.slug, menu.uri, 'GET')
-    }
-    if (data.permission) {
-      await casbinService.addGroupingPolicy(data.permission, menu.slug)
-    }
-    if (data.roles && data.roles.length > 0) {
-      for (const role of data.roles) {
-        await casbinService.addGroupingPolicy(role, menu.slug)
-      }
-    }
     return true
   }
 }

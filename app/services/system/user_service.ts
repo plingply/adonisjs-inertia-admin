@@ -60,7 +60,7 @@ export class UserService {
     const casbinService = new CasbinService()
     await casbinService.deleteRolesForUser(username)
     for (const role of roles) {
-      await casbinService.addGroupingPolicy(username, role)
+      await casbinService.addUserRole(username, role)
     }
   }
 }
