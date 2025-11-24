@@ -13,11 +13,9 @@
       <div class="ml-16 grid gap-24 items-center" style="grid-template-columns: 60px 1fr 0px">
         <div class="flex items-center h-48 cursor-pointer" @click="isCollapse = !isCollapse">
           <el-icon class="w-24! text-18! text-center">
-            <svg-icon icon-class="collapse" :class="isCollapse ? 'rotate-z-180' : ''" />
+            <Expand v-if="isCollapse" />
+            <Fold v-else/>
           </el-icon>
-          <span class="menu_collapse_text text-14 c-gray-4">
-            {{ !isCollapse ? '收起' : '展开' }}
-          </span>
         </div>
         <div class="font-bold text-center flex-1 relative h-full flex justify-end flex-items-center">
           <div>
@@ -47,7 +45,7 @@
 <script setup lang="ts">
 import { ElMessageBox } from 'element-plus';
 import { ref, defineOptions, computed } from 'vue'
-
+import { Expand, Fold } from '@element-plus/icons-vue'
 import MenuContent from '~/components/MenuContent.vue'
 const props = defineProps<{
   user: any

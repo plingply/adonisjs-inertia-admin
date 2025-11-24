@@ -30,10 +30,10 @@
             <div m-y-4px>
               <template v-if="item.http_method && item.http_method.length > 0">
                 <template v-for="tag in item.http_method">
-                  <el-tag size="mini" m-r-4px>{{ tag }}</el-tag>
+                  <el-tag size="small" m-r-4px>{{ tag }}</el-tag>
                 </template>
               </template>
-              <el-tag v-else size="mini" m-r-4px>ANY</el-tag>
+              <el-tag v-else size="small" m-r-4px>ANY</el-tag>
               <span>{{ item.http_path }}</span>
             </div>
           </div>
