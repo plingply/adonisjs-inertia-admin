@@ -92,33 +92,6 @@ export class MenuService {
     return ids
   }
 
-  public static getAllMenuIcons() {
-    const icons = [] as string[]
-    function getFiles(dir: string, splitFirName: string) {
-      const stat = fs.statSync(dir)
-      if (stat.isDirectory()) {
-        //判断是不是目录
-        const dirs = fs.readdirSync(dir)
-        dirs.forEach((value) => {
-          getFiles(path.join(dir, value), splitFirName)
-        })
-      } else if (stat.isFile()) {
-        //判断是不是文件
-        const paths = dir.split('/')
-        const start = paths.indexOf(splitFirName)
-        const iconName = paths.slice(start + 1, paths.length - 1).join('.')
-        const name = path.parse(dir).name
-        if (iconName) {
-          icons.push(iconName + '/' + name)
-        } else {
-          icons.push(name)
-        }
-      }
-    }
-    getFiles('inertia/assets/icons', 'icons')
-    return icons
-  }
-
   public static async createMenu(data: MenuCreateReq) {
     const menu = await AdminMenu.create(data)
     menu.slug = `${menu.id}_${menu.parentId}`

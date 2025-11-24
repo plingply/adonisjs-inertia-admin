@@ -57,10 +57,12 @@
 <script setup lang="ts">
 import { ref, computed, inject, reactive } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import type AdminMenu from '#models/system/admin_menu'
+import type AdminPermission from '#models/system/admin_permission'
 
 const menuFormRef = ref()
-const menus = inject<any[]>('menus')
-const permissions = inject<any[]>('permissions')
+const menus = inject<AdminMenu[]>('menus')
+const permissions = inject<AdminPermission[]>('permissions')
 
 const emit = defineEmits(['submit'])
 const visible = ref(false)

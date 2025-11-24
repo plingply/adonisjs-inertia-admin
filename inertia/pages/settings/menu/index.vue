@@ -66,13 +66,15 @@ import { saveMenu, getAllMenuToTree, delMenuById, createMenu } from '~/api/menu'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import MenuForm from './menu-form.vue'
 import MenuEdit from './menu-edit.vue'
+import type AdminMenu from '#models/system/admin_menu'
+import type AdminPermission from '#models/system/admin_permission'
+import type AdminRole from '#models/system/admin_role'
 
 defineOptions({ layout: Layout })
 const props = defineProps<{
-  menus: any[]
-  permissions: any[]
-  roles: any[]
-  icons: string[]
+  menus: AdminMenu[]
+  permissions: AdminPermission[]
+  roles: AdminRole[]
 }>()
 
 
@@ -84,7 +86,6 @@ const expandAll = ref(true)
 provide('menus', menus)
 provide('permissions', props.permissions)
 provide('roles', props.roles)
-provide('icons', props.icons)
 
 const formatNodeParentId = (tree: any[], parentId = 0) => {
   const data = tree.map((item, index) => {

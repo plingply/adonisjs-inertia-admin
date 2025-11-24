@@ -21,11 +21,12 @@
 </template>
 <script setup lang="ts">
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-const props = defineProps<{
+defineProps<{
   menus: any[]
 }>()
 
 const getIconComponent = (icon: string) => {
+  // @ts-ignore
   return ElementPlusIconsVue[icon]
 }
 const isArray = (data: any) => {
