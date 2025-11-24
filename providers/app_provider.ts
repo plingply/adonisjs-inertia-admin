@@ -1,7 +1,6 @@
 import type { ApplicationService } from '@adonisjs/core/types'
 import { DatabaseQueryBuilder } from '@adonisjs/lucid/database'
 import { ModelQueryBuilder } from '@adonisjs/lucid/orm'
-import { DateTime } from 'luxon'
 
 export default class AppProvider {
   constructor(protected app: ApplicationService) {}
