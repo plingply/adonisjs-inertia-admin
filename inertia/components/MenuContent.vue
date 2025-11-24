@@ -4,33 +4,32 @@
       <el-sub-menu v-if="menu.children && menu.children.length > 0" :index="menu.uri">
         <template #title>
           <el-icon v-if="menu.icon">
-            <svg-icon class="svgClass" :icon-class="menu.icon"> </svg-icon
-          ></el-icon>
+            <component :is="getIconComponent(menu.icon)"></component>
+          </el-icon>
           <span>{{ menu.title }}</span>
         </template>
         <menu-content :menus="menu.children"></menu-content>
       </el-sub-menu>
       <el-menu-item v-else :index="menu.uri">
         <el-icon v-if="menu.icon">
-          <svg-icon class="svgClass" :icon-class="menu.icon"> </svg-icon
-        ></el-icon>
+          <component :is="getIconComponent(menu.icon)"></component>
+        </el-icon>
         <template #title>{{ menu.title }}</template>
       </el-menu-item>
     </template>
   </template>
 </template>
-<script>
-export default {
-  name: 'menu-content',
-  props: ['menus'],
-  data() {
-    return {}
-  },
-  methods: {
-    isArray(data) {
-      return Array.isArray(data)
-    }
-  },
+<script setup lang="ts">
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+const props = defineProps<{
+  menus: any[]
+}>()
+
+const getIconComponent = (icon: string) => {
+  return ElementPlusIconsVue[icon]
+}
+const isArray = (data: any) => {
+  return Array.isArray(data)
 }
 </script>
 <style scoped>

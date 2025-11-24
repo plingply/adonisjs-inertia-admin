@@ -25,13 +25,9 @@
           <el-input v-model="form.icon" @focus="visible = true" @blur="visible = false"></el-input>
         </template>
         <div text-20 flex flex-wrap gap-10>
-          <svg-icon
-            v-for="icon in icons"
-            :key="icon"
-            :icon-class="icon"
-            cursor-pointer
-            @click="form.icon = icon"
-          ></svg-icon>
+          <template v-for="(icon, key) in ElementPlusIconsVue">
+            <component :is="icon" size="20" cursor-pointer hover:text-blue @click="form.icon = key" />
+          </template>
         </div>
       </el-popover>
     </el-form-item>
@@ -60,11 +56,11 @@
 
 <script setup lang="ts">
 import { ref, computed, inject, reactive } from 'vue'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const menuFormRef = ref()
 const menus = inject<any[]>('menus')
 const permissions = inject<any[]>('permissions')
-const icons = inject<string[]>('icons')
 
 const emit = defineEmits(['submit'])
 const visible = ref(false)
