@@ -17,4 +17,9 @@ export default class AuthController extends Controller {
       return this.error('登录失败', error.status)
     }
   }
+
+  public async logout({ auth, response }: HttpContext) {
+    await auth.use('web').logout()
+    return response.redirect('/login')
+  }
 }

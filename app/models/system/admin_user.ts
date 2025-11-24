@@ -1,4 +1,4 @@
-import { column, computed, manyToMany } from '@adonisjs/lucid/orm'
+import { column, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import hash from '@adonisjs/core/services/hash'

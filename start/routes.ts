@@ -10,10 +10,7 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import AdminUser from '#models/system/admin_user'
-import CasbinService from '#services/casbin_service'
-import AdminMenu from '#models/system/admin_menu'
-import { MenuService } from '#services/system/menu_service'
-import AdminRole from '#models/system/admin_role'
+
 const AuthController = () => import('#controllers/system/auth_controller')
 const IndexController = () => import('#controllers/index_controller')
 const MenuController = () => import('#controllers/system/menu_controller')
@@ -37,6 +34,7 @@ router
   .group(() => {
     router.on('/no-permission').renderInertia('errors/no_permission')
     router.get('/', [IndexController, 'index'])
+    router.get('/logout', [AuthController, 'logout'])
     router
       .group(() => {
         router.get('/menu', [MenuController, 'index'])

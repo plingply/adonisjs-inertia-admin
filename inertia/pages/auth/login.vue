@@ -67,10 +67,11 @@
 <script setup lang="ts" name="Login">
 import { ref } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
-const loginRef = ref(null)
-import { login } from '../../api/auth'
 import { ElMessage } from 'element-plus'
-import cache from '../../utils/cache'
+import { login } from '~/api/auth'
+import cache from '~/utils/cache'
+
+const loginRef = ref()
 const loginForm = ref({
   username: '',
   // username: 'admin',
@@ -85,7 +86,7 @@ const loginRules = {
 
 const loginSubmit = () => {
   if (!loginRef.value) return
-  loginRef.value.validate(async (valid) => {
+  loginRef.value?.validate(async (valid: boolean) => {
     if (valid) {
       login(loginForm.value.username, loginForm.value.password)
       .then((res) => {

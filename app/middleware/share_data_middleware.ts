@@ -1,4 +1,3 @@
-import { AuthService } from '#services/system/auth_service'
 import { MenuService } from '#services/system/menu_service'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'

@@ -1,13 +1,11 @@
 import AdminMenu from '#models/system/admin_menu'
 import { handleTree } from '../../utils/index.js'
-import fs from 'node:fs'
-import path from 'node:path'
 import { MenuCreateReq, MenuUpdateReq } from '#types/menu'
 import CasbinService from '#services/casbin_service'
 import AdminUser from '#models/system/admin_user'
 
 export class MenuService {
-  public static publicMenus = ['/login', '/api/login', '/no-permission']
+  public static publicMenus = ['/login', '/api/login', '/no-permission', '/logout']
 
   public static isPublicRoute(url: string) {
     return this.publicMenus.includes(url)

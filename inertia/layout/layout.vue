@@ -19,7 +19,14 @@
             {{ !isCollapse ? '收起' : '展开' }}
           </span>
         </div>
-        <div class="font-bold text-center flex-1 relative h-full">{{ user?.name }}</div>
+        <div class="font-bold text-center flex-1 relative h-full flex justify-end flex-items-center">
+          <div>
+            {{ user?.name }}
+          </div>
+          <el-icon class="w-24! text-18! text-center cursor-pointer m-l-10px" @click="logout">
+            <svg-icon icon-class="logout" c-gray-5 />
+          </el-icon>
+        </div>
       </div>
     </div>
     <div
@@ -38,6 +45,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessageBox } from 'element-plus';
 import { ref, defineOptions, computed } from 'vue'
 
 import MenuContent from '~/components/MenuContent.vue'
@@ -59,6 +67,16 @@ const menuSelect = (url: string) => {
   console.log('menuSelect', url)
   if (!url) return
   location.href = url
+}
+
+const logout = () => {
+  ElMessageBox.confirm('确定要退出吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    location.href = '/logout'
+  })
 }
 </script>
 
