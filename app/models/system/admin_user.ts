@@ -61,11 +61,7 @@ export default class AdminUser extends compose(SoftDeleteTesModel, AuthFinder) {
   })
   declare updatedAt: DateTime | null
 
-  @column.dateTime({
-    serialize: (value: DateTime | null) => {
-      return value ? value.setZone().toFormat('yyyy-MM-dd HH:mm:ss') : value
-    },
-  })
+  @column.dateTime()
   declare deletedAt: DateTime | null
 
   @manyToMany(() => AdminPermission, {

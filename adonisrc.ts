@@ -51,6 +51,7 @@ export default defineConfig({
     () => import('@adonisjs/core/providers/edge_provider'),
     () => import('@adonisjs/session/session_provider'),
     () => import('@adonisjs/vite/vite_provider'),
+    () => import('#providers/app_provider'),
     () => import('@adonisjs/shield/shield_provider'),
     () => import('@adonisjs/static/static_provider'),
     () => import('@adonisjs/cors/cors_provider'),
