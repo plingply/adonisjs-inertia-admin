@@ -10,7 +10,7 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import AdminUser from '#models/system/admin_user'
-
+import app from '@adonisjs/core/services/app'
 const AuthController = () => import('#controllers/system/auth_controller')
 const IndexController = () => import('#controllers/index_controller')
 const MenuController = () => import('#controllers/system/menu_controller')
@@ -18,15 +18,19 @@ const RoleController = () => import('#controllers/system/role_controller')
 const PeimissionController = () => import('#controllers/system/peimission_controller')
 const UserController = () => import('#controllers/system/user_controller')
 const OperationLogsController = () => import('#controllers/system/operation_logs_controller')
+const ScheduleController = () => import('#controllers/system/schedule_controller')
+router.jobs()
 
 router.get('/test', async ({ response }) => {
   // const user = await AdminUser.withTrashed().where('id', 1).first()
   // return user
   // const user = await AdminUser.query().with
 
-  const user = await AdminUser.onlyTrashed().restore()
+  // const user = await AdminUser.onlyTrashed().restore()
   // await AdminRole.query().withTrashed().where('id', 1).restore()
-  return user
+  return {
+    data: 1,
+  }
 })
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
@@ -42,6 +46,7 @@ router
         router.get('/peimission', [PeimissionController, 'index'])
         router.get('/user', [UserController, 'index'])
         router.get('/operation_logs', [OperationLogsController, 'index'])
+        router.get('/schedule', [ScheduleController, 'index'])
       })
       .use(middleware.rotuePermission())
       .prefix('/settings')
@@ -78,6 +83,14 @@ router
         router.post('/user/create', [UserController, 'create'])
 
         router.get('/operation_logs/list', [OperationLogsController, 'list'])
+
+        router.get('/schedule/list', [ScheduleController, 'list'])
+        router.post('/schedule/update', [ScheduleController, 'update'])
+        router.post('/schedule/delete', [ScheduleController, 'delete'])
+        router.post('/schedule/create', [ScheduleController, 'create'])
+        router.post('/schedule/refresh/pm2', [ScheduleController, 'refreshPM2List'])
+        router.post('/schedule/restart/pm2', [ScheduleController, 'restartPM2List'])
+        router.post('/schedule/stop/pm2', [ScheduleController, 'stopPM2List'])
       })
       .use(middleware.auth())
       .use(middleware.log())

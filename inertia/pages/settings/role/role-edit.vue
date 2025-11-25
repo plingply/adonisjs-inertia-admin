@@ -31,7 +31,7 @@
 import { ref, defineEmits, computed, reactive } from 'vue'
 import type AdminPermission from '#models/system/admin_permission'
 import { ElMessage } from 'element-plus'
-import { updateRole, createRole } from '~/api/role'
+import { update, create } from '~/api/role'
 const emit = defineEmits(['update:show', 'submit'])
 const props = defineProps<{
   data: any
@@ -90,7 +90,7 @@ const saveRoleData = () => {
         slug: form.value.slug,
         permissions: form.value.permissions,
       }
-      createRole(data).then((res) => {
+      create(data).then((res) => {
         if (res.data.code === 200) {
           ElMessage.success('创建成功')
           close()
@@ -100,7 +100,7 @@ const saveRoleData = () => {
         }
       })
     } else {
-      updateRole(form.value).then((res) => {
+      update(form.value).then((res) => {
         if (res.data.code === 200) {
           ElMessage.success('更新成功')
           close()

@@ -29,6 +29,9 @@ export default defineConfig({
     () => import('@adonisjs/core/commands'),
     () => import('@adonisjs/lucid/commands'),
     () => import('adonisjs6-generate-models/commands'),
+    () => import('adonisjs-scheduler/commands'),
+    () => import('adonisjs-jobs/commands'),
+    () => import('@adonisjs/cache/commands'),
   ],
 
   /*
@@ -58,6 +61,13 @@ export default defineConfig({
     () => import('@adonisjs/lucid/database_provider'),
     () => import('@adonisjs/auth/auth_provider'),
     () => import('@adonisjs/inertia/inertia_provider'),
+    {
+      file: () => import('adonisjs-scheduler/scheduler_provider'),
+      environment: ['console'],
+    },
+    () => import('adonisjs-jobs/jobs_provider'),
+    () => import('@adonisjs/cache/cache_provider'),
+    () => import('@adonisjs/redis/redis_provider'),
   ],
 
   /*
@@ -68,7 +78,14 @@ export default defineConfig({
   | List of modules to import before starting the application.
   |
   */
-  preloads: [() => import('#start/routes'), () => import('#start/kernel')],
+  preloads: [
+    () => import('#start/routes'),
+    () => import('#start/kernel'),
+    {
+      file: () => import('#start/scheduler'),
+      environment: ['console'],
+    },
+  ],
 
   /*
   |--------------------------------------------------------------------------

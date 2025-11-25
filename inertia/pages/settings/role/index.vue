@@ -65,7 +65,7 @@ import Layout from '~/layout/layout.vue'
 import type AdminRole from '#models/system/admin_role'
 import type AdminPermission from '#models/system/admin_permission'
 import { ref, defineProps } from 'vue'
-import { getRolePage, delRoleById } from '~/api/role'
+import { getPage, delRoleById } from '~/api/role'
 import RoleEdit from './role-edit.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -97,7 +97,7 @@ const searchFunc = () => {
 }
 const getList = () => {
   loading.value = true
-  getRolePage(queryParams.value)
+  getPage(queryParams.value)
     .then((res) => {
       list.value = res.data.data.item
       total.value = res.data.data.total

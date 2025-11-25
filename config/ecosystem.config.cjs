@@ -1,0 +1,40 @@
+module.exports = {
+  apps: [
+    {
+      name: 'queue',
+      script: 'node ace jobs:listen --concurrency=4',
+      watch: true,
+      ignore_watch: ['node_modules', 'logs', 'uploadFiles'],
+      instances: 1,
+      error_file: './logs/queue.log',
+      log_data_format: 'YYYY-MM-DD HH:MM:SS',
+    },
+    {
+      name: 'queue-system',
+      script: 'node ace jobs:listen --concurrency=1 --queue=system',
+      watch: true,
+      ignore_watch: ['node_modules', 'logs', 'uploadFiles'],
+      instances: 1,
+      error_file: './logs/queue-system.log',
+      log_data_format: 'YYYY-MM-DD HH:MM:SS',
+    },
+    {
+      name: 'queue-user',
+      script: 'node ace jobs:listen --concurrency=1 --queue=user',
+      watch: true,
+      ignore_watch: ['node_modules', 'logs', 'uploadFiles'],
+      instances: 1,
+      error_file: './logs/queue-user.log',
+      log_data_format: 'YYYY-MM-DD HH:MM:SS',
+    },
+    {
+      name: 'scheduler',
+      script: 'node ace scheduler:run',
+      watch: true,
+      ignore_watch: ['node_modules', 'logs', 'uploadFiles'],
+      instances: 1,
+      error_file: './logs/scheduler.log',
+      log_data_format: 'YYYY-MM-DD HH:MM:SS',
+    },
+  ],
+}

@@ -8,7 +8,7 @@ export class RoleService {
     return res
   }
 
-  public static async getRolePage(page: number, limit: number, search: string) {
+  public static async getPage(page: number, limit: number, search: string) {
     const query = AdminRole.query().preload('permissions').orderBy('id', 'asc')
     if (search) {
       query.where('name', 'like', `%${search}%`)
@@ -17,7 +17,7 @@ export class RoleService {
     return res
   }
 
-  public static async createRole(data: RoleCreateReq) {
+  public static async create(data: RoleCreateReq) {
     const role = new AdminRole()
     role.merge(data)
     await role.save()
@@ -28,7 +28,7 @@ export class RoleService {
     return true
   }
 
-  public static async updateRole(data: RoleUpdateReq) {
+  public static async update(data: RoleUpdateReq) {
     const role = await AdminRole.find(data.id)
     if (!role) return false
     role.name = data.name
@@ -41,7 +41,7 @@ export class RoleService {
     return true
   }
 
-  public static async deleteRoleById(id: number) {
+  public static async deleteById(id: number) {
     const role = await AdminRole.find(id)
     if (!role) return false
     const casbinService = new CasbinService()

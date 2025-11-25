@@ -10,7 +10,7 @@ export default class RoleController extends Controller {
     const page = request.input('page', 1)
     const limit = request.input('limit', 10)
     const search = request.input('search', '')
-    const roles = await RoleService.getRolePage(page, limit, search)
+    const roles = await RoleService.getPage(page, limit, search)
     const data = paginate(roles)
     const permissions = await AdminPermission.all()
     return inertia.render('settings/role/index', {
@@ -24,28 +24,28 @@ export default class RoleController extends Controller {
     const page = request.input('page', 1)
     const limit = request.input('limit', 10)
     const search = request.input('search', '')
-    const roles = await RoleService.getRolePage(page, limit, search)
+    const roles = await RoleService.getPage(page, limit, search)
     const data = paginate(roles)
     return this.success(data)
   }
 
   public async delete({ request }: HttpContext) {
     const payload = await DeleteRoleValidator.validate(request.all())
-    const res = await RoleService.deleteRoleById(payload.id)
+    const res = await RoleService.deleteById(payload.id)
     if (!res) return this.error('删除失败')
     return this.success()
   }
 
   public async create({ request }: HttpContext) {
     const payload = await CreateRoleValidator.validate(request.all())
-    const res = await RoleService.createRole(payload)
+    const res = await RoleService.create(payload)
     if (!res) return this.error('创建失败')
     return this.success()
   }
 
   public async update({ request }: HttpContext) {
     const payload = await UpdateRoleValidator.validate(request.all())
-    const res = await RoleService.updateRole(payload)
+    const res = await RoleService.update(payload)
     if (!res) return this.error('更新失败')
     return this.success()
   }
