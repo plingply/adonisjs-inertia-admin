@@ -80,4 +80,14 @@ export default class ScheduleController extends Controller {
     const data = await ScheduleService.stopPm2(appName)
     return this.success(data)
   }
+
+  public async executeNow({ request }: HttpContext) {
+    const id = request.param('id')
+    if (!id) return this.error('参数错误')
+    const data = await ScheduleService.executeNow(id)
+    if (data.success) {
+      return this.success(data)
+    }
+    return this.error(data.message)
+  }
 }

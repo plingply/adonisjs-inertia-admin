@@ -29,3 +29,7 @@ export async function stopPM2App(appName = 'all') {
     appName,
   })
 }
+
+export const executeScheduleNow = (id: number) => {
+  return axios.post(`/api/schedule/${id}/execute`)
+}

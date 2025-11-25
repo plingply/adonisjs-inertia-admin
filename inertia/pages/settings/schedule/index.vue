@@ -11,14 +11,12 @@
       <el-table-column prop="memory" label="内存" />
       <el-table-column prop="cpu" label="CPU" />
       <el-table-column prop="instances" label="实例" />
-      <el-table-column prop="created_at" label="创建时间" width="180"/>
+      <el-table-column prop="created_at" label="创建时间" width="180" />
       <el-table-column prop="restart_time" label="重启次数" />
-      <el-table-column prop="pm_uptime" label="更新时间" width="180"/>
+      <el-table-column prop="pm_uptime" label="更新时间" width="180" />
       <el-table-column prop="" label="操作" fixed="right" width="140">
         <template #default="{ row }">
-          <el-button type="primary" size="small" @click="restartPM2AppClick(row)"
-            >重启</el-button
-          >
+          <el-button type="primary" size="small" @click="restartPM2AppClick(row)">重启</el-button>
           <el-button type="primary" size="small" @click="stopPM2AppClick(row)">停止</el-button>
         </template>
       </el-table-column>
@@ -35,7 +33,12 @@
           />
         </el-form-item>
         <el-form-item prop="group">
-          <el-select v-model="queryParams.group" placeholder="请选择分组" clearable style="width: 150px">
+          <el-select
+            v-model="queryParams.group"
+            placeholder="请选择分组"
+            clearable
+            style="width: 150px"
+          >
             <el-option
               v-for="item in groups"
               :key="item.value"
@@ -81,7 +84,7 @@
       <el-table-column prop="updated_at" label="更新时间" width="170" />
       <el-table-column prop="" label="操作" fixed="right" width="220">
         <template #default="{ row }">
-          <el-button type="primary" size="small" @click="() => $emit('edit', row)"
+          <el-button type="primary" size="small" @click="executeNow(row)"
             >立即执行</el-button
           >
           <el-button type="primary" size="small" @click="() => $emit('edit', row)">编辑</el-button>
@@ -103,7 +106,14 @@
 import Layout from '~/layout/layout.vue'
 import { ref, defineProps } from 'vue'
 import type AdminScheduler from '#models/system/admin_scheduler'
-import { getSchedulePage, refreshPM2List, restartPM2App, stopPM2App, updateSchedule } from '~/api/schedule'
+import {
+  executeScheduleNow,
+  getSchedulePage,
+  refreshPM2List,
+  restartPM2App,
+  stopPM2App,
+  updateSchedule,
+} from '~/api/schedule'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
 
@@ -155,29 +165,32 @@ const isActiveChange = (e: boolean, row: any) => {
   updateSchedule({
     id: row.id,
     is_active: e,
-  }).then(res=>{
-    if(res.data.code === 200){
-      ElMessage.success('更新成功')
-    }else{
-      ElMessage.error('更新失败')
-    }
-  }).catch(()=>{
-    ElMessage.error('更新失败')
   })
+    .then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success('更新成功')
+      } else {
+        ElMessage.error('更新失败')
+      }
+    })
+    .catch(() => {
+      ElMessage.error('更新失败')
+    })
 }
 
 const refreshPm2List = () => {
   refreshPM2List()
-  .then(res=>{
-    if(res.data.code === 200) {
-      pm2List.value = res.data.data
-      ElMessage.success('刷新成功')
-    } else {
+    .then((res) => {
+      if (res.data.code === 200) {
+        pm2List.value = res.data.data
+        ElMessage.success('刷新成功')
+      } else {
+        ElMessage.error('刷新失败')
+      }
+    })
+    .catch(() => {
       ElMessage.error('刷新失败')
-    }
-  }).catch(()=>{
-    ElMessage.error('刷新失败')
-  })
+    })
 }
 
 const restartPM2AppClick = (row: any) => {
@@ -186,16 +199,18 @@ const restartPM2AppClick = (row: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    restartPM2App(row.name).then(res=>{
-      if(res.data.code === 200){
-        ElMessage.success('重启成功')
-        refreshPm2List()
-      }else{
+    restartPM2App(row.name)
+      .then((res) => {
+        if (res.data.code === 200) {
+          ElMessage.success('重启成功')
+          refreshPm2List()
+        } else {
+          ElMessage.error('重启失败')
+        }
+      })
+      .catch(() => {
         ElMessage.error('重启失败')
-      }
-    }).catch(()=>{
-      ElMessage.error('重启失败')
-    })
+      })
   })
 }
 
@@ -205,19 +220,41 @@ const stopPM2AppClick = (row: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    stopPM2App(row.name).then(res=>{
-      if(res.data.code === 200){
-        ElMessage.success('停止成功')
-        refreshPm2List()
-      }else{
+    stopPM2App(row.name)
+      .then((res) => {
+        if (res.data.code === 200) {
+          ElMessage.success('停止成功')
+          refreshPm2List()
+        } else {
+          ElMessage.error('停止失败')
+        }
+      })
+      .catch(() => {
         ElMessage.error('停止失败')
-      }
-    }).catch(()=>{
-      ElMessage.error('停止失败')
-    })
+      })
   })
 }
 
+// 添加立即执行函数
+const executeNow = (row: any) => {
+  ElMessageBox.confirm(`确定要立即执行任务 "${row.name}" 吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    executeScheduleNow(row.id)
+      .then((res) => {
+        if (res.data.code === 200) {
+          ElMessage.success('任务已启动执行')
+        } else {
+          ElMessage.error('执行失败: ' + res.data.message)
+        }
+      })
+      .catch((err) => {
+        ElMessage.error('执行失败: ' + err.message)
+      })
+  })
+}
 </script>
 
 <style lang="scss" scoped>

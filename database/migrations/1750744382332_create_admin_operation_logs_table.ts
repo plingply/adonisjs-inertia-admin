@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('user_id').notNullable().index('admin_operation_log_user_id_index')
-      table.string('path', 191).notNullable()
+      table.text('path').notNullable()
       table.string('method', 10).notNullable()
       table.string('ip', 15).notNullable()
       table.text('input').notNullable()

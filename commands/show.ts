@@ -7,8 +7,8 @@ export default class Show extends BaseCommand {
   static description = ''
 
   static options: CommandOptions = {
-    startApp: false,
-    staysAlive: false,
+    startApp: true,
+    staysAlive: true,
   }
 
   @flags.string({

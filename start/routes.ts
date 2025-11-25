@@ -19,7 +19,6 @@ const PeimissionController = () => import('#controllers/system/peimission_contro
 const UserController = () => import('#controllers/system/user_controller')
 const OperationLogsController = () => import('#controllers/system/operation_logs_controller')
 const ScheduleController = () => import('#controllers/system/schedule_controller')
-router.jobs()
 
 router.get('/test', async ({ response }) => {
   // const user = await AdminUser.withTrashed().where('id', 1).first()
@@ -32,6 +31,8 @@ router.get('/test', async ({ response }) => {
     data: 1,
   }
 })
+
+router.jobs().use(middleware.auth())
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router
@@ -48,11 +49,11 @@ router
         router.get('/operation_logs', [OperationLogsController, 'index'])
         router.get('/schedule', [ScheduleController, 'index'])
       })
+      .use(middleware.log())
       .use(middleware.rotuePermission())
       .prefix('/settings')
   })
   .use(middleware.auth())
-  .use(middleware.log())
   .use(middleware.shareData())
 
 // api
@@ -91,6 +92,7 @@ router
         router.post('/schedule/refresh/pm2', [ScheduleController, 'refreshPM2List'])
         router.post('/schedule/restart/pm2', [ScheduleController, 'restartPM2List'])
         router.post('/schedule/stop/pm2', [ScheduleController, 'stopPM2List'])
+        router.post('/schedule/:id/execute', [ScheduleController, 'executeNow'])
       })
       .use(middleware.auth())
       .use(middleware.log())

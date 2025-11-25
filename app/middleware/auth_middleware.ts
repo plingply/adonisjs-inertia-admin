@@ -27,7 +27,7 @@ export default class AuthMiddleware {
       }
       return next()
     } catch (error) {
-      console.log(error)
+      console.log('AuthMiddleware err: ', error)
       return ctx.response.redirect(this.redirectTo, true)
     }
   }
