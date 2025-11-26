@@ -20,7 +20,13 @@ export class ScheduleService {
 
   public static async create(data: ScheduleCreateReq) {
     const scheduler = new AdminScheduler()
-    scheduler.merge(data)
+    scheduler.name = data.name
+    scheduler.command = data.command
+    scheduler.description = data.description
+    scheduler.cron = data.cron
+    scheduler.group = data.group
+    scheduler.is_active = data.is_active
+    scheduler.args = JSON.stringify(data.args)
     await scheduler.save()
     return true
   }
@@ -28,7 +34,9 @@ export class ScheduleService {
   public static async update(data: ScheduleUpdateReq) {
     const scheduler = await AdminScheduler.find(data.id)
     if (!scheduler) return false
+    // @ts-ignore
     scheduler.merge(data)
+    scheduler.args = JSON.stringify(scheduler.args)
     await scheduler.save()
     return true
   }

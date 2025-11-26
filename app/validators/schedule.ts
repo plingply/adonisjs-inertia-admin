@@ -8,7 +8,7 @@ export const CreateScheduleValidator = vine.compile(
     cron: vine.string(),
     group: vine.string(),
     args: vine.array(vine.string()).optional(),
-    is_active: vine.boolean().optional(),
+    is_active: vine.boolean(),
   })
 )
 

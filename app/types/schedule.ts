@@ -5,7 +5,7 @@ export interface ScheduleCreateReq {
   cron: string
   group: string
   args?: string[]
-  is_active?: boolean
+  is_active: boolean
 }
 
 export interface ScheduleUpdateReq {

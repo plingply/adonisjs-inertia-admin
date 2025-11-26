@@ -44,14 +44,16 @@ export default class ScheduleController extends Controller {
     const payload = await DeleteScheduleValidator.validate(request.all())
     const res = await ScheduleService.deleteById(payload.id)
     if (!res) return this.error('删除失败')
-    return this.success()
+    const msg = await ScheduleService.restartPm2()
+    return this.success(msg.message)
   }
 
   public async create({ request }: HttpContext) {
     const payload = await CreateScheduleValidator.validate(request.all())
     const res = await ScheduleService.create(payload)
     if (!res) return this.error('创建失败')
-    return this.success()
+    const msg = await ScheduleService.restartPm2()
+    return this.success(msg.message)
   }
 
   public async update({ request }: HttpContext) {

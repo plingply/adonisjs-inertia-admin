@@ -25,13 +25,13 @@ export default class AdminScheduler extends SoftDeleteTesModel {
   declare is_active: boolean
 
   @column()
-  declare description: string
+  declare description?: string
 
   @column()
   declare group: string
 
   @column()
-  declare args: string[]
+  declare args?: string
 
   @column.dateTime({
     autoCreate: true,

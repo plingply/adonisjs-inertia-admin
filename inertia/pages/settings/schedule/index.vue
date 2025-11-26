@@ -49,7 +49,8 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchFunc">查询</el-button>
-          <el-button @click="reset">重置</el-button>
+          <el-button plain @click="reset">重置</el-button>
+          <el-button type="primary" @click="openAddNewSchedule">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -87,8 +88,8 @@
           <el-button type="primary" size="small" @click="executeNow(row)"
             >立即执行</el-button
           >
-          <el-button type="primary" size="small" @click="() => $emit('edit', row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="() => $emit('delete', row)">删除</el-button>
+          <el-button type="primary" size="small" @click="openEdit(row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,23 +100,80 @@
       m-t-16
       @pagination="getList"
     />
+
+    <!-- 新增/编辑定时任务对话框 -->
+    <el-dialog
+      :title="dialogTitle"
+      v-model="dialogVisible"
+      width="600px"
+      @close="handleDialogClose"
+    >
+      <el-form
+        ref="scheduleFormRef"
+        :model="currentSchedule"
+        :rules="formRules"
+        label-width="100px"
+      >
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="currentSchedule.name" />
+        </el-form-item>
+        <el-form-item label="指令" prop="command">
+          <el-input v-model="currentSchedule.command" />
+        </el-form-item>
+        <el-form-item label="分组" prop="group">
+          <el-select v-model="currentSchedule.group" style="width: 100%">
+            <el-option
+              v-for="item in groups"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="执行时间" prop="cron">
+          <el-input v-model="currentSchedule.cron" placeholder="例如: 0 0 * * *" />
+        </el-form-item>
+        <el-form-item label="参数" prop="args">
+          <el-input
+            v-model="argsInput"
+            type="textarea"
+            placeholder="每行一个参数，例如:&#10;arg1&#10;arg2"
+          />
+        </el-form-item>
+        <el-form-item label="状态" prop="is_active">
+          <el-switch v-model="currentSchedule.is_active" />
+        </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <el-input v-model="currentSchedule.description" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import Layout from '~/layout/layout.vue'
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, reactive, computed, watch } from 'vue'
 import type AdminScheduler from '#models/system/admin_scheduler'
 import {
+  delScheduleById,
   executeScheduleNow,
   getSchedulePage,
   refreshPM2List,
   restartPM2App,
   stopPM2App,
   updateSchedule,
+  createSchedule,
 } from '~/api/schedule'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
+import type { FormInstance } from 'element-plus'
 
 defineOptions({ layout: Layout })
 const props = defineProps<{
@@ -138,6 +196,38 @@ const queryParams = ref({
 const total = ref(props.total)
 const loading = ref(false)
 const list = ref(props.list)
+
+// 对话框相关
+const dialogVisible = ref(false)
+const dialogType = ref<'create' | 'update'>('create')
+const scheduleFormRef = ref<FormInstance>()
+const argsInput = ref('')
+
+// 表单规则
+const formRules = {
+  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+  command: [{ required: true, message: '请输入指令', trigger: 'blur' }],
+  group: [{ required: true, message: '请选择分组', trigger: 'change' }],
+  cron: [{ required: true, message: '请输入执行时间', trigger: 'blur' }],
+}
+
+// 当前编辑的定时任务
+const currentSchedule = reactive({
+  id: 0,
+  name: '',
+  command: '',
+  group: '',
+  cron: '',
+  args: [] as string[],
+  is_active: true,
+  description: '',
+})
+
+// 对话框标题
+const dialogTitle = computed(() => {
+  return dialogType.value === 'create' ? '新增定时任务' : '编辑定时任务'
+})
+
 const reset = () => {
   queryParams.value.page = 1
   queryParams.value.search = ''
@@ -254,6 +344,87 @@ const executeNow = (row: any) => {
         ElMessage.error('执行失败: ' + err.message)
       })
   })
+}
+
+const handleDelete = (row: any) => {
+  ElMessageBox.confirm(`确定要删除定时任务 "${row.name}" 吗？`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    delScheduleById(row.id)
+    .then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success('删除成功')
+        getList()
+      } else {
+        ElMessage.error('删除失败')
+      }
+    })
+  }).catch(() => {
+
+  })
+}
+
+const openEdit = (row: any) => {
+  dialogType.value = 'update'
+  Object.assign(currentSchedule, row)
+  argsInput.value = row.args.join('\n')
+  dialogVisible.value = true
+}
+
+const openAddNewSchedule = () => {
+  dialogType.value = 'create'
+  Object.assign(currentSchedule, {
+    id: 0,
+    name: '',
+    command: '',
+    group: '',
+    cron: '',
+    args: [],
+    is_active: true,
+    description: '',
+  })
+  argsInput.value = ''
+  dialogVisible.value = true
+}
+
+const handleDialogClose = () => {
+  scheduleFormRef.value?.resetFields()
+}
+
+// 提交表单
+const submitForm = async () => {
+  const valid = await scheduleFormRef.value?.validate()
+  if (!valid) return
+
+  // 处理参数输入
+  currentSchedule.args = argsInput.value
+    .split('\n')
+    .map(arg => arg.trim())
+    .filter(arg => arg.length > 0)
+
+  loading.value = true
+  try {
+    let res
+    if (dialogType.value === 'create') {
+      res = await createSchedule(currentSchedule)
+    } else {
+      res = await updateSchedule(currentSchedule)
+    }
+
+    if (res.data.code === 200) {
+      ElMessage.success(dialogType.value === 'create' ? '创建成功' : '更新成功')
+      dialogVisible.value = false
+      getList()
+    } else {
+      ElMessage.error(res.data.message || (dialogType.value === 'create' ? '创建失败' : '更新失败'))
+    }
+  } catch (err: any) {
+    ElMessage.error(err.message || (dialogType.value === 'create' ? '创建失败' : '更新失败'))
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
