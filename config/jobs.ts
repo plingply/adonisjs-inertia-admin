@@ -19,7 +19,7 @@ const jobsConfig = defineConfig({
     /**
      * The total number of attempts to try the job until it completes.
      */
-    attempts: 0,
+    attempts: 3,
 
     /**
      * Backoff setting for automatic retries if the job fails

@@ -19,16 +19,14 @@ const PeimissionController = () => import('#controllers/system/peimission_contro
 const UserController = () => import('#controllers/system/user_controller')
 const OperationLogsController = () => import('#controllers/system/operation_logs_controller')
 const ScheduleController = () => import('#controllers/system/schedule_controller')
+const QueueController = () => import('#controllers/system/queue_controller')
 
+import redis from '@adonisjs/redis/services/main'
 router.get('/test', async ({ response }) => {
-  // const user = await AdminUser.withTrashed().where('id', 1).first()
-  // return user
-  // const user = await AdminUser.query().with
-
-  // const user = await AdminUser.onlyTrashed().restore()
-  // await AdminRole.query().withTrashed().where('id', 1).restore()
+  await redis.select(15)
+  const count = await redis.llen(`bull:user:wait`)
   return {
-    data: 1,
+    data: count,
   }
 })
 
@@ -48,6 +46,7 @@ router
         router.get('/user', [UserController, 'index'])
         router.get('/operation_logs', [OperationLogsController, 'index'])
         router.get('/schedule', [ScheduleController, 'index'])
+        router.get('/queue', [QueueController, 'index'])
       })
       .use(middleware.log())
       .use(middleware.rotuePermission())
@@ -93,6 +92,11 @@ router
         router.post('/schedule/restart/pm2', [ScheduleController, 'restartPM2List'])
         router.post('/schedule/stop/pm2', [ScheduleController, 'stopPM2List'])
         router.post('/schedule/:id/execute', [ScheduleController, 'executeNow'])
+
+        router.get('/queue/overview', [QueueController, 'overview'])
+        router.get('/queue/jobs', [QueueController, 'jobs'])
+        router.post('/queue/job/restart', [QueueController, 'jobRestart'])
+        router.post('/queue/job/delete', [QueueController, 'jobDelete'])
       })
       .use(middleware.auth())
       .use(middleware.log())
