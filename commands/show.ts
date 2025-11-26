@@ -26,5 +26,6 @@ export default class Show extends BaseCommand {
         queueName: this.queue || 'default',
       }
     )
+    return true
   }
 }

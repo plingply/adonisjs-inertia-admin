@@ -3,10 +3,7 @@ import { ScheduleCreateReq, ScheduleUpdateReq } from '#types/schedule'
 import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
 import pm2 from 'pm2'
-import { exec } from 'node:child_process'
-import { promisify } from 'node:util'
-import { error } from 'node:console'
-const execPromise = promisify(exec)
+import ace from '@adonisjs/core/services/ace'
 
 export class ScheduleService {
   public static async getPage(page: number, limit: number, search: string, group: string) {
@@ -145,17 +142,13 @@ export class ScheduleService {
       return { success: false, message: '任务不存在', data: null }
     }
     try {
-      // 示例执行逻辑（根据你的具体需求调整）
-      const { stdout, stderr } = await execPromise(
-        `node ace ${scheduler.command} ${scheduler.args.join(' ')}`
+      logger.info(
+        `executeNow: node ace ${scheduler.command} ${scheduler.args.join(' ')} && id = ${id}`
       )
-
+      const result = await ace.exec(scheduler.command, scheduler.args)
       // 记录执行日志
-      logger.info(`Task ${scheduler.name} executed successfully:`, stdout)
-      if (stderr) {
-        logger.warn(`Task ${scheduler.name} has warnings:`, stderr)
-      }
-      return { success: true, data: { stdout, stderr }, message: null }
+      logger.info(`Task ${scheduler.name} executed successfully`)
+      return { success: true, data: result, message: null }
     } catch (err) {
       console.error(err)
       logger.error(`Task ${scheduler.name} execution failed:`, err)

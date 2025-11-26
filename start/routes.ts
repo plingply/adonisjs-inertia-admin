@@ -32,7 +32,7 @@ router.get('/test', async ({ response }) => {
   }
 })
 
-router.jobs().use(middleware.auth())
+router.jobs()
 
 router.on('/login').renderInertia('auth/login').use(middleware.guest())
 router
