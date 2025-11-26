@@ -148,7 +148,7 @@ export class ScheduleService {
       const result = await ace.exec(scheduler.command, scheduler.args)
       // 记录执行日志
       logger.info(`Task ${scheduler.name} executed successfully`)
-      return { success: true, data: result, message: null }
+      return { success: true, data: result, message: '执行成功' }
     } catch (err) {
       console.error(err)
       logger.error(`Task ${scheduler.name} execution failed:`, err)
