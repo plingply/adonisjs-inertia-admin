@@ -1,6 +1,6 @@
 <template>
   <div bg-white p-20px min-h-500px>
-    <div text-16 border-b="1px solid #eee" p-b-10px>概览 <el-icon cursor-pointer @click="getQueueOverview"><Refresh /></el-icon></div>
+    <div text-16 border-b="1px solid #eee" p-b-10px>概览 <el-icon cursor-pointer @click="queueOverview"><Refresh /></el-icon></div>
     <div flex>
       <div w-200px m-r-10px border-r="1px solid #eee" p-t-20px>
         <div
@@ -38,7 +38,7 @@
             <el-table-column label="完成" prop="jobs_completed"></el-table-column>
             <el-table-column label="失败" prop="jobs_failed"></el-table-column>
             <el-table-column label="正在执行" prop="jobs_active"></el-table-column>
-            <el-table-column label="等待执行" prop="jobs_waiting"></el-table-column>
+            <el-table-column label="等待执行" prop="jobs_wait"></el-table-column>
           </el-table>
         </div>
         <div v-else v-loading="loading">
@@ -152,7 +152,9 @@ const total = computed(() => {
 
 const queueOverview = () => {
   getQueueOverview().then((res) => {
-    queues.value = res.data.data
+    if(res.data.code == 200) {
+      queues.value = res.data.data
+    }
   })
 }
 
@@ -203,7 +205,14 @@ const deleteJob = (key: string) => {
   })
 }
 
-queueOverview()
+const loopGetOverview = () => {
+  queueOverview()
+  setTimeout(() => {
+    loopGetOverview()
+  }, 3000)
+}
+
+loopGetOverview()
 </script>
 
 <style lang="scss" scoped>
