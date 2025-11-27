@@ -5,7 +5,7 @@
         <el-form-item prop="keyword">
           <el-input
             v-model="queryParams.search"
-            placeholder="请输入名称查询"
+            placeholder="请输入关键字查询"
             maxlength="50"
             @keydown.enter="searchFunc"
           />
@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column prop="path" label="访问路径">
         <template #default="{ row }">
-          <el-tag type="primary">{{ row.path }}</el-tag>
+          {{ row.path }}
         </template>
       </el-table-column>
       <el-table-column prop="input" label="输入">

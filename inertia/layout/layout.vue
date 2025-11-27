@@ -35,7 +35,7 @@
       <el-menu :default-active="activeMenu" :collapse="isCollapse" router @select="menuSelect">
         <menu-content :menus="myMenus"></menu-content>
       </el-menu>
-      <div class="p-16 h-full box-border w-full of-x-auto">
+      <div class="p-16 h-full box-border w-full of-y-auto">
         <slot></slot>
       </div>
     </div>

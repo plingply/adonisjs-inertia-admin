@@ -14,19 +14,29 @@ export default class CasbinRule extends BaseModel {
   })
   declare v0: string | null // user or role
 
-  @column()
+  @column({
+    columnName: 'v1',
+  })
   declare v1: string | null // resource or role
 
-  @column()
+  @column({
+    columnName: 'v2',
+  })
   declare v2: string | null // action
 
-  @column()
+  @column({
+    columnName: 'v3',
+  })
   declare v3: string | null // extra field
 
-  @column()
+  @column({
+    columnName: 'v4',
+  })
   declare v4: string | null // extra field
 
-  @column()
+  @column({
+    columnName: 'v5',
+  })
   declare v5: string | null // extra field
 
   @column.dateTime({

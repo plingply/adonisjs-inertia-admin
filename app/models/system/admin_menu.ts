@@ -10,9 +10,6 @@ export default class AdminMenu extends SoftDeleteTesModel {
   declare parentId: number | null
 
   @column()
-  declare slug: string
-
-  @column()
   declare order: number | null
 
   @column()

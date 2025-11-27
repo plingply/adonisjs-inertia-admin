@@ -35,11 +35,6 @@ export class MenuService {
   public static async saveMenuAll(menus: any[]) {
     // 新增菜单
     await AdminMenu.updateOrCreateMany(['id'], menus)
-    const allMenu = await AdminMenu.query().orderBy('order', 'asc')
-    for (const menu of allMenu) {
-      menu.slug = `${menu.id}_${menu.parentId}`
-      await menu.save()
-    }
     return true
   }
 
@@ -91,9 +86,7 @@ export class MenuService {
   }
 
   public static async createMenu(data: MenuCreateReq) {
-    const menu = await AdminMenu.create(data)
-    menu.slug = `${menu.id}_${menu.parentId}`
-    await menu.save()
+    await AdminMenu.create(data)
     return true
   }
 
@@ -106,7 +99,6 @@ export class MenuService {
     menu.permission = data.permission || null
     menu.title = data.title
     menu.uri = data.uri
-    menu.slug = `${menu.id}_${menu.parentId}`
     await menu.save()
     return true
   }
