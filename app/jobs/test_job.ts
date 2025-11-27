@@ -7,7 +7,7 @@ type TestPayload = {
 export default class TestJob extends Job {
   async handle(payload: TestPayload) {
     this.logger.info(payload.message)
-    throw new Error('Error')
+    await this.sleep(5000)
   }
 
   sleep(time) {

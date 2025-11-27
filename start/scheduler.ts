@@ -4,8 +4,9 @@ import scheduler from 'adonisjs-scheduler/services/main'
 async function init() {
   const list = await AdminScheduler.query().where('is_active', 1)
   list.forEach(async (sch: AdminScheduler) => {
-    scheduler.command(sch.command, [...sch.args]).cron(sch.cron)
+    const args = sch.args ? JSON.parse(sch.args) : []
+    scheduler.command(sch.command, args).cron(sch.cron)
   })
 }
 
-// init()
+init()
