@@ -1,4 +1,4 @@
-FROM node:22.16.0-alpine3.22 AS base
+FROM node:22.21-alpine AS base
 
 # Production stage
 FROM base
