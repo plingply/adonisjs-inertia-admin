@@ -131,6 +131,14 @@ export default defineConfig({
       reloadServer: false,
     },
     {
+      pattern: 'config/casbin_model.conf',
+      reloadServer: false,
+    },
+    {
+      pattern: 'config/ecosystem.config.cjs',
+      reloadServer: false,
+    },
+    {
       pattern: 'inertia/**',
       reloadServer: true,
     },
