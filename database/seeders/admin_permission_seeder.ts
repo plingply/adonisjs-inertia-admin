@@ -3,7 +3,7 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
 export default class extends BaseSeeder {
   async run() {
-    AdminPermission.updateOrCreateMany(
+    await AdminPermission.updateOrCreateMany(
       ['id'],
       [
         {

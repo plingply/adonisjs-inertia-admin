@@ -3,7 +3,7 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
 export default class extends BaseSeeder {
   async run() {
-    CasbinRule.updateOrCreateMany(
+    await CasbinRule.updateOrCreateMany(
       ['ptype', 'v0', 'v1'],
       [
         {
