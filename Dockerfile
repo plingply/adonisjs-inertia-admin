@@ -4,20 +4,20 @@ FROM node:22.21-alpine AS base
 FROM base AS deps
 WORKDIR /app
 ADD package.json yarn.lock ./
-RUN npm ci
+RUN yarn install
 
 # Production only deps stage
 FROM base AS production-deps
 WORKDIR /app
 ADD package.json yarn.lock ./
-RUN npm ci --omit=dev
+RUN yarn install --production
 
 # Build stage
 FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules /app/node_modules
 ADD . .
-RUN node ace build
+RUN yarn build
 
 # Production stage
 FROM base
